@@ -22,17 +22,20 @@ namespace CS_WindowsFormDraw
             point2 = { 25, 200, 0 },
             point3 = { 150, 200, 0 },
             point4 = { 150, 50, 0 },
-            point5 = { 50, 50, -150 },
-            point6 = { 50, 200, -150 },
-            point7 = { 100, 200, -150 },
-            point8 = { 100, 50, -150 },
+            point5 = { 50, 50, 150 },
+            point6 = { 50, 200, 150 },
+            point7 = { 100, 200, 150 },
+            point8 = { 100, 50, 150 },
             zAxisU = { 0, 0, 500 },
             zAxisD = { 0, 0, -500 },
             xAxisU = { 500, 0, 0 },
             xAxisD = { -500, 0, 0 },
             yAxisU = { 0, 500, 0 },
             yAxisD = { 0, -500, 0 },
-            origin = { 0, 0, 0 };
+            origin = { 0, 0, 0 },
+            camera = {-500, -500, -500 },
+            camV = { 0, 1, 0 },
+            viewerV = { 500, 500, 500 };
 
         static PointF point21;
         static PointF point22;
@@ -48,7 +51,10 @@ namespace CS_WindowsFormDraw
         static PointF xAxis2D;
         static PointF yAxis2U;
         static PointF origin2;
+        static PointF cameraF;
+        static PointF viewerF;
 
+        bool changed18 = false, changed19 = false, changed20 = false, changed21 = false, changed22 = false, changed23 = false;
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             theta = float.Parse(textBox1.Text);
@@ -281,7 +287,7 @@ namespace CS_WindowsFormDraw
                 y = (matrix1[1, 0] * pointToRotate[0]) + (matrix1[1, 1] * pointToRotate[1]) + (matrix1[1, 2] * pointToRotate[2]);
                 z = (matrix1[2, 0] * pointToRotate[0]) + (matrix1[2, 1] * pointToRotate[1]) + (matrix1[2, 2] * pointToRotate[2]);
             }
-            pointToRotate[0] = x;
+            pointToRotate[0] = x;  
             pointToRotate[1] = y;
             pointToRotate[2] = z;
         }
@@ -293,8 +299,8 @@ namespace CS_WindowsFormDraw
             double[,] matrixX =
                 {
                     { 1, 0, 0 }, // x
-                    { 0, Math.Cos(rotValue),Math.Sin(rotValue) }, // y
-                    { 0, -Math.Sin(rotValue), Math.Cos(rotValue) }  // z
+                    { 0, Math.Cos(rotValue), -Math.Sin(rotValue) }, // y
+                    { 0, Math.Sin(rotValue), Math.Cos(rotValue) }  // z
                 };
 
             double[,] matrixY =
@@ -306,8 +312,8 @@ namespace CS_WindowsFormDraw
 
             double[,] matrixZ =
                             {
-                    { Math.Cos(rotValue), Math.Sin(rotValue), 0 }, // x
-                    { -Math.Sin(rotValue), Math.Cos(rotValue), 0 }, // y
+                    { Math.Cos(rotValue), -Math.Sin(rotValue), 0 }, // x
+                    { Math.Sin(rotValue), Math.Cos(rotValue), 0 }, // y
                     { 0, 0, 1 }  // z
                 };
 
@@ -403,6 +409,136 @@ namespace CS_WindowsFormDraw
             textBox17.Text = (int.Parse(textBox3.Text) * int.Parse(textBox8.Text) + int.Parse(textBox4.Text) * int.Parse(textBox11.Text) + int.Parse(textBox5.Text) * int.Parse(textBox14.Text)).ToString();
         }
 
+        private void textBox18_TextChanged(object sender, EventArgs e)
+        {
+            changed18 = true;
+        }
+
+        private void textBox19_TextChanged(object sender, EventArgs e)
+        {
+            changed19 = true;
+        }
+
+        private void textBox20_TextChanged(object sender, EventArgs e)
+        {
+            changed20 = true;
+        }
+
+        private void textBox21_TextChanged(object sender, EventArgs e)
+        {
+            changed21 = true;
+        }
+
+        private void textBox22_TextChanged(object sender, EventArgs e)
+        {
+            changed22 = true;
+        }
+
+        private void textBox23_TextChanged(object sender, EventArgs e)
+        {
+            changed23 = true;
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            camV[0] = double.Parse(textBox24.Text);
+            camV[1] = double.Parse(textBox25.Text);
+            camV[2] = double.Parse(textBox26.Text);
+        }
+
+        private void trackBar4_Scroll(object sender, EventArgs e)
+        {
+            camV[0] = trackBar4.Value / 100.0;
+            if (camV[0] == 0 && camV[1] == 0 && camV[2] == 0)
+            {
+                camV[0] = 0.1;
+            }
+            textBox24.Text = (trackBar4.Value / 100.0).ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar5_Scroll(object sender, EventArgs e)
+        {
+            camV[1] = trackBar5.Value / 100.0;
+            if (camV[0] == 0 && camV[1] == 0 && camV[2] == 0)
+            {
+                camV[1] = 0.1;
+            }
+            textBox25.Text = (trackBar5.Value / 100.0).ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar6_Scroll(object sender, EventArgs e)
+        {
+            camV[2] = trackBar6.Value / 100.0;
+            if (camV[0] == 0 && camV[1] == 0 && camV[2] == 0)
+            {
+                camV[2] = 0.1;
+            }
+            textBox26.Text = (trackBar6.Value / 100.0).ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar7_Scroll(object sender, EventArgs e)
+        {
+            camera[0] = trackBar7.Value;
+            textBox18.Text = (trackBar7.Value).ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar8_Scroll(object sender, EventArgs e)
+        {
+            camera[1] = trackBar8.Value;
+            textBox19.Text = (trackBar8.Value).ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar9_Scroll(object sender, EventArgs e)
+        {
+            camera[2] = trackBar9.Value;
+            textBox20.Text = (trackBar9.Value).ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar10_Scroll(object sender, EventArgs e)
+        {
+            viewerV[0] = trackBar10.Value;
+            textBox21.Text = (trackBar10.Value).ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar11_Scroll(object sender, EventArgs e)
+        {
+            viewerV[1] = trackBar11.Value;
+            textBox22.Text = (trackBar11.Value).ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar12_Scroll(object sender, EventArgs e)
+        {
+            viewerV[2] = trackBar12.Value;
+            textBox23.Text = (trackBar12.Value).ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
             textBox15.Text = (int.Parse(textBox3.Text) * int.Parse(textBox6.Text) + int.Parse(textBox4.Text) * int.Parse(textBox9.Text) + int.Parse(textBox5.Text) * int.Parse(textBox12.Text)).ToString();
@@ -438,6 +574,55 @@ namespace CS_WindowsFormDraw
             updateSquare();
             this.Refresh();
             DrawSquare(myPoints);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+            if (changed18)
+            {
+                camera[0] = int.Parse(textBox18.Text);
+            }
+            if (changed19)
+            {
+                camera[1] = int.Parse(textBox19.Text);
+            }
+            if (changed20)
+            {
+                camera[2] = int.Parse(textBox20.Text);
+            }
+            if (changed21)
+            {
+                viewerV[0] = int.Parse(textBox21.Text);
+            }
+            if (changed22)
+            {
+                viewerV[1] = int.Parse(textBox22.Text);
+            }
+            if (changed23)
+            {
+                viewerV[2] = int.Parse(textBox23.Text);
+            }
+            changed18 = false;
+            changed19 = false;
+            changed20 = false;
+            changed21 = false;
+            changed22 = false;
+            changed23 = false;
+
+            textBox18.Text = camera[0].ToString();
+            textBox19.Text = camera[1].ToString();
+            textBox20.Text = camera[2].ToString();
+            textBox21.Text = viewerV[0].ToString();
+            textBox22.Text = viewerV[1].ToString();
+            textBox23.Text = viewerV[2].ToString();
+
+            trackBar7.Value = (int)camera[0];
+            trackBar8.Value = (int)camera[1];
+            trackBar9.Value = (int)camera[2];
+            trackBar10.Value = (int)viewerV[0];
+            trackBar11.Value = (int)viewerV[1];
+            trackBar12.Value = (int)viewerV[2];
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -718,13 +903,87 @@ namespace CS_WindowsFormDraw
             gra.DrawLine(new Pen(Color.Black, penWidth), points[6], points[7]);
             gra.DrawLine(new Pen(Color.Black, penWidth), points[7], points[4]);
 
+
+            gra.DrawLine(new Pen(Color.Red, 5), points[14], viewerF);
+
             gra.Dispose();
             blackPen.Dispose();
         }
         private PointF pointTransfer(double[] pointT)
         {
-            PointF temporaryPF = new PointF((float)(-Math.Sin(theta) * pointT[0] + Math.Cos(theta) * pointT[1]) + (this.Width / 2), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointT[0] + (-Math.Sin(theta) * Math.Sin(phi)) * pointT[1] + Math.Cos(phi) * pointT[2]) + (this.Height / 2));
+            
+            double[,] pers1 =
+            {
+                {1, 0, 0 },
+                {0, Math.Cos(camV[0]), Math.Sin(camV[0]) },
+                {0, -Math.Sin(camV[0]), Math.Cos(camV[0]) }
+            };
+            double[,] pers2 =
+            {
+                {Math.Cos(camV[1]), 0, -Math.Sin(camV[1]) },
+                {0, 1, 0 },
+                {Math.Sin(camV[1]), 0, Math.Cos(camV[1]) }
+            };
+            double[,] pers3 =
+            {
+                {Math.Cos(camV[2]), Math.Sin(camV[2]), 0 },
+                {-Math.Sin(camV[2]), Math.Cos(camV[2]), 0 },
+                {0, 0, 1 }
+            };
+
+            double[,] fustrum =
+            {
+                {1,0,-viewerV[0]/viewerV[2],0 },
+                {0,1,-viewerV[1]/viewerV[2],0 },
+                {0,0,1,0 },
+                {0,0,-1/viewerV[2],1 }
+            };
+            PointF temporaryPF;
+            if (checkBox7.Checked)
+            {
+                temporaryPF = new PointF((float)(-Math.Sin(theta) * pointT[0] + Math.Cos(theta) * pointT[1]) + (this.Width / 2), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointT[0] + (-Math.Sin(theta) * Math.Sin(phi)) * pointT[1] + Math.Cos(phi) * pointT[2]) + (this.Height / 2));
+                return temporaryPF;
+            }
+            else
+            {
+               
+                double[,] tempMat1 = multiply3x3Matrix(pers1, pers2);
+                double[,] tempMat2 = multiply3x3Matrix(tempMat1, pers3);
+                double pointX = (tempMat2[0, 0] * (pointT[0] - camera[0])) + (tempMat2[0, 1] * (pointT[1] - camera[1])) + (tempMat2[0, 2] * (pointT[2] - camera[2]));
+                double pointY = (tempMat2[1, 0] * (pointT[0] - camera[0])) + (tempMat2[1, 1] * (pointT[1] - camera[1])) + (tempMat2[1, 2] * (pointT[2] - camera[2]));
+                double pointZ = (tempMat2[2, 0] * (pointT[0] - camera[0])) + (tempMat2[2, 1] * (pointT[1] - camera[1])) + (tempMat2[2, 2] * (pointT[2] - camera[2]));
+
+                temporaryPF = new PointF((float)(-Math.Sin(theta) * pointX + Math.Cos(theta) * pointY) + (this.Width / 2), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointX + (-Math.Sin(theta) * Math.Sin(phi)) * pointY + Math.Cos(phi) * pointZ) + (this.Height / 2));
+                double[] tempCoord = { pointX, pointY, pointZ, 1 };
+                double[] tempMatFustrum = multiply4x1Matrix(fustrum, tempCoord);
+                temporaryPF.X = (float)(tempMatFustrum[0] / tempMatFustrum[3]);
+                temporaryPF.Y = (float)(tempMatFustrum[1] / tempMatFustrum[3]);
+            }
+
             return temporaryPF;
+
+
+        }
+        private double[,] multiply3x3Matrix(double[,] mat1,double[,] mat2)
+        {
+            double [,] tempMatResult=
+            {
+                { (mat1[0,0]*mat2[0,0])+(mat1[0,1]*mat2[1,0])+(mat1[0,2]*mat2[2,0]), (mat1[0,0]*mat2[0,1])+(mat1[0,1]*mat2[1,1])+(mat1[0,2]*mat2[2,1]), (mat1[0,0]*mat2[0,2])+(mat1[0,1]*mat2[1,2])+(mat1[0,2]*mat2[2,2]) },
+                { (mat1[1,0]*mat2[0,0])+(mat1[1,1]*mat2[1,0])+(mat1[1,2]*mat2[2,0]), (mat1[1,0]*mat2[0,1])+(mat1[1,1]*mat2[1,1])+(mat1[1,2]*mat2[2,1]), (mat1[1,0]*mat2[0,2])+(mat1[1,1]*mat2[1,2])+(mat1[1,2]*mat2[2,2]) },
+                { (mat1[2,0]*mat2[0,0])+(mat1[2,1]*mat2[1,0])+(mat1[2,2]*mat2[2,0]), (mat1[2,0]*mat2[0,1])+(mat1[2,1]*mat2[1,1])+(mat1[2,2]*mat2[2,1]), (mat1[2,0]*mat2[0,2])+(mat1[2,1]*mat2[1,2])+(mat1[2,2]*mat2[2,2]) }
+            };
+            return tempMatResult;
+        }
+        private double[] multiply4x1Matrix(double[,] mat1, double[] mat2)
+        {
+            double[] tempMatResult =
+            {
+                (mat1[0,0]*mat2[0]) + (mat1[0,1]*mat2[1]) + (mat1[0,2]*mat2[2]),
+                (mat1[1,0]*mat2[0]) + (mat1[1,1]*mat2[1]) + (mat1[1,2]*mat2[2]),
+                (mat1[2,0]*mat2[0]) + (mat1[2,1]*mat2[1]) + (mat1[2,2]*mat2[2]),
+                (mat1[3,0]*mat2[0]) + (mat1[3,1]*mat2[1]) + (mat1[3,2]*mat2[2])
+            };
+            return tempMatResult;
         }
 
         private void updateSquare()
@@ -745,6 +1004,8 @@ namespace CS_WindowsFormDraw
             yAxis2D = pointTransfer(yAxisD);
             origin2 = pointTransfer(origin);
 
+            cameraF = pointTransfer(camera);
+            viewerF = pointTransfer(viewerV);
 
 
 

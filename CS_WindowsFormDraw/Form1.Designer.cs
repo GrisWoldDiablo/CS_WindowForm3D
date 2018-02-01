@@ -63,9 +63,39 @@
             this.textBox16 = new System.Windows.Forms.TextBox();
             this.textBox17 = new System.Windows.Forms.TextBox();
             this.checkBox6 = new System.Windows.Forms.CheckBox();
+            this.checkBox7 = new System.Windows.Forms.CheckBox();
+            this.trackBar4 = new System.Windows.Forms.TrackBar();
+            this.trackBar5 = new System.Windows.Forms.TrackBar();
+            this.textBox18 = new System.Windows.Forms.TextBox();
+            this.textBox19 = new System.Windows.Forms.TextBox();
+            this.textBox20 = new System.Windows.Forms.TextBox();
+            this.button7 = new System.Windows.Forms.Button();
+            this.textBox21 = new System.Windows.Forms.TextBox();
+            this.textBox22 = new System.Windows.Forms.TextBox();
+            this.textBox23 = new System.Windows.Forms.TextBox();
+            this.textBox24 = new System.Windows.Forms.TextBox();
+            this.textBox25 = new System.Windows.Forms.TextBox();
+            this.textBox26 = new System.Windows.Forms.TextBox();
+            this.button8 = new System.Windows.Forms.Button();
+            this.trackBar6 = new System.Windows.Forms.TrackBar();
+            this.trackBar7 = new System.Windows.Forms.TrackBar();
+            this.trackBar8 = new System.Windows.Forms.TrackBar();
+            this.trackBar9 = new System.Windows.Forms.TrackBar();
+            this.trackBar10 = new System.Windows.Forms.TrackBar();
+            this.trackBar11 = new System.Windows.Forms.TrackBar();
+            this.trackBar12 = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar10)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar11)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar12)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -403,6 +433,8 @@
             // checkBox6
             // 
             this.checkBox6.AutoSize = true;
+            this.checkBox6.Checked = true;
+            this.checkBox6.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox6.Location = new System.Drawing.Point(710, 65);
             this.checkBox6.Name = "checkBox6";
             this.checkBox6.Size = new System.Drawing.Size(74, 17);
@@ -410,11 +442,233 @@
             this.checkBox6.Text = "Clockwise";
             this.checkBox6.UseVisualStyleBackColor = true;
             // 
+            // checkBox7
+            // 
+            this.checkBox7.AutoSize = true;
+            this.checkBox7.Location = new System.Drawing.Point(512, 50);
+            this.checkBox7.Name = "checkBox7";
+            this.checkBox7.Size = new System.Drawing.Size(82, 17);
+            this.checkBox7.TabIndex = 24;
+            this.checkBox7.Text = "Perspective";
+            this.checkBox7.UseVisualStyleBackColor = true;
+            // 
+            // trackBar4
+            // 
+            this.trackBar4.Location = new System.Drawing.Point(20, 145);
+            this.trackBar4.Maximum = 500;
+            this.trackBar4.Minimum = -500;
+            this.trackBar4.Name = "trackBar4";
+            this.trackBar4.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.trackBar4.Size = new System.Drawing.Size(45, 77);
+            this.trackBar4.TabIndex = 25;
+            this.trackBar4.Scroll += new System.EventHandler(this.trackBar4_Scroll);
+            // 
+            // trackBar5
+            // 
+            this.trackBar5.Location = new System.Drawing.Point(76, 145);
+            this.trackBar5.Maximum = 500;
+            this.trackBar5.Minimum = -500;
+            this.trackBar5.Name = "trackBar5";
+            this.trackBar5.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.trackBar5.Size = new System.Drawing.Size(45, 77);
+            this.trackBar5.TabIndex = 26;
+            this.trackBar5.Scroll += new System.EventHandler(this.trackBar5_Scroll);
+            // 
+            // textBox18
+            // 
+            this.textBox18.Location = new System.Drawing.Point(20, 423);
+            this.textBox18.Name = "textBox18";
+            this.textBox18.Size = new System.Drawing.Size(50, 20);
+            this.textBox18.TabIndex = 27;
+            this.textBox18.TextChanged += new System.EventHandler(this.textBox18_TextChanged);
+            // 
+            // textBox19
+            // 
+            this.textBox19.Location = new System.Drawing.Point(76, 423);
+            this.textBox19.Name = "textBox19";
+            this.textBox19.Size = new System.Drawing.Size(50, 20);
+            this.textBox19.TabIndex = 28;
+            this.textBox19.TextChanged += new System.EventHandler(this.textBox19_TextChanged);
+            // 
+            // textBox20
+            // 
+            this.textBox20.Location = new System.Drawing.Point(132, 423);
+            this.textBox20.Name = "textBox20";
+            this.textBox20.Size = new System.Drawing.Size(50, 20);
+            this.textBox20.TabIndex = 29;
+            this.textBox20.TextChanged += new System.EventHandler(this.textBox20_TextChanged);
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(188, 576);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.TabIndex = 30;
+            this.button7.Text = "button7";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // textBox21
+            // 
+            this.textBox21.Location = new System.Drawing.Point(20, 576);
+            this.textBox21.Name = "textBox21";
+            this.textBox21.Size = new System.Drawing.Size(50, 20);
+            this.textBox21.TabIndex = 33;
+            this.textBox21.TextChanged += new System.EventHandler(this.textBox21_TextChanged);
+            // 
+            // textBox22
+            // 
+            this.textBox22.Location = new System.Drawing.Point(76, 576);
+            this.textBox22.Name = "textBox22";
+            this.textBox22.Size = new System.Drawing.Size(50, 20);
+            this.textBox22.TabIndex = 32;
+            this.textBox22.TextChanged += new System.EventHandler(this.textBox22_TextChanged);
+            // 
+            // textBox23
+            // 
+            this.textBox23.Location = new System.Drawing.Point(132, 576);
+            this.textBox23.Name = "textBox23";
+            this.textBox23.Size = new System.Drawing.Size(50, 20);
+            this.textBox23.TabIndex = 31;
+            this.textBox23.TextChanged += new System.EventHandler(this.textBox23_TextChanged);
+            // 
+            // textBox24
+            // 
+            this.textBox24.Location = new System.Drawing.Point(15, 228);
+            this.textBox24.Name = "textBox24";
+            this.textBox24.Size = new System.Drawing.Size(50, 20);
+            this.textBox24.TabIndex = 33;
+            this.textBox24.Text = "0";
+            // 
+            // textBox25
+            // 
+            this.textBox25.Location = new System.Drawing.Point(71, 228);
+            this.textBox25.Name = "textBox25";
+            this.textBox25.Size = new System.Drawing.Size(50, 20);
+            this.textBox25.TabIndex = 32;
+            this.textBox25.Text = "1";
+            // 
+            // textBox26
+            // 
+            this.textBox26.Location = new System.Drawing.Point(127, 228);
+            this.textBox26.Name = "textBox26";
+            this.textBox26.Size = new System.Drawing.Size(50, 20);
+            this.textBox26.TabIndex = 31;
+            this.textBox26.Text = "0";
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(183, 225);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 23);
+            this.button8.TabIndex = 30;
+            this.button8.Text = "CamV";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // trackBar6
+            // 
+            this.trackBar6.Location = new System.Drawing.Point(132, 145);
+            this.trackBar6.Maximum = 500;
+            this.trackBar6.Minimum = -500;
+            this.trackBar6.Name = "trackBar6";
+            this.trackBar6.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.trackBar6.Size = new System.Drawing.Size(45, 77);
+            this.trackBar6.TabIndex = 26;
+            this.trackBar6.Scroll += new System.EventHandler(this.trackBar6_Scroll);
+            // 
+            // trackBar7
+            // 
+            this.trackBar7.Location = new System.Drawing.Point(20, 298);
+            this.trackBar7.Maximum = 1000;
+            this.trackBar7.Minimum = -1000;
+            this.trackBar7.Name = "trackBar7";
+            this.trackBar7.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.trackBar7.Size = new System.Drawing.Size(45, 104);
+            this.trackBar7.TabIndex = 34;
+            this.trackBar7.Scroll += new System.EventHandler(this.trackBar7_Scroll);
+            // 
+            // trackBar8
+            // 
+            this.trackBar8.Location = new System.Drawing.Point(76, 298);
+            this.trackBar8.Maximum = 1000;
+            this.trackBar8.Minimum = -1000;
+            this.trackBar8.Name = "trackBar8";
+            this.trackBar8.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.trackBar8.Size = new System.Drawing.Size(45, 104);
+            this.trackBar8.TabIndex = 34;
+            this.trackBar8.Scroll += new System.EventHandler(this.trackBar8_Scroll);
+            // 
+            // trackBar9
+            // 
+            this.trackBar9.Location = new System.Drawing.Point(132, 298);
+            this.trackBar9.Maximum = 1000;
+            this.trackBar9.Minimum = -1000;
+            this.trackBar9.Name = "trackBar9";
+            this.trackBar9.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.trackBar9.Size = new System.Drawing.Size(45, 104);
+            this.trackBar9.TabIndex = 34;
+            this.trackBar9.Scroll += new System.EventHandler(this.trackBar9_Scroll);
+            // 
+            // trackBar10
+            // 
+            this.trackBar10.Location = new System.Drawing.Point(20, 466);
+            this.trackBar10.Maximum = 1000;
+            this.trackBar10.Minimum = -1000;
+            this.trackBar10.Name = "trackBar10";
+            this.trackBar10.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.trackBar10.Size = new System.Drawing.Size(45, 104);
+            this.trackBar10.TabIndex = 34;
+            this.trackBar10.Scroll += new System.EventHandler(this.trackBar10_Scroll);
+            // 
+            // trackBar11
+            // 
+            this.trackBar11.Location = new System.Drawing.Point(76, 466);
+            this.trackBar11.Maximum = 1000;
+            this.trackBar11.Minimum = -1000;
+            this.trackBar11.Name = "trackBar11";
+            this.trackBar11.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.trackBar11.Size = new System.Drawing.Size(45, 104);
+            this.trackBar11.TabIndex = 34;
+            this.trackBar11.Scroll += new System.EventHandler(this.trackBar11_Scroll);
+            // 
+            // trackBar12
+            // 
+            this.trackBar12.Location = new System.Drawing.Point(132, 466);
+            this.trackBar12.Maximum = 1000;
+            this.trackBar12.Minimum = -1000;
+            this.trackBar12.Name = "trackBar12";
+            this.trackBar12.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.trackBar12.Size = new System.Drawing.Size(45, 104);
+            this.trackBar12.TabIndex = 34;
+            this.trackBar12.Scroll += new System.EventHandler(this.trackBar12_Scroll);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1227, 736);
+            this.Controls.Add(this.trackBar12);
+            this.Controls.Add(this.trackBar9);
+            this.Controls.Add(this.trackBar11);
+            this.Controls.Add(this.trackBar8);
+            this.Controls.Add(this.trackBar10);
+            this.Controls.Add(this.trackBar7);
+            this.Controls.Add(this.textBox24);
+            this.Controls.Add(this.textBox21);
+            this.Controls.Add(this.textBox25);
+            this.Controls.Add(this.textBox22);
+            this.Controls.Add(this.textBox26);
+            this.Controls.Add(this.textBox23);
+            this.Controls.Add(this.button8);
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.textBox20);
+            this.Controls.Add(this.textBox19);
+            this.Controls.Add(this.textBox18);
+            this.Controls.Add(this.trackBar6);
+            this.Controls.Add(this.trackBar5);
+            this.Controls.Add(this.trackBar4);
+            this.Controls.Add(this.checkBox7);
             this.Controls.Add(this.checkBox6);
             this.Controls.Add(this.textBox17);
             this.Controls.Add(this.textBox14);
@@ -458,6 +712,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar10)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar11)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar12)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -500,6 +763,27 @@
         private System.Windows.Forms.TextBox textBox16;
         private System.Windows.Forms.TextBox textBox17;
         private System.Windows.Forms.CheckBox checkBox6;
+        private System.Windows.Forms.CheckBox checkBox7;
+        private System.Windows.Forms.TrackBar trackBar4;
+        private System.Windows.Forms.TrackBar trackBar5;
+        private System.Windows.Forms.TextBox textBox18;
+        private System.Windows.Forms.TextBox textBox19;
+        private System.Windows.Forms.TextBox textBox20;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.TextBox textBox21;
+        private System.Windows.Forms.TextBox textBox22;
+        private System.Windows.Forms.TextBox textBox23;
+        private System.Windows.Forms.TextBox textBox24;
+        private System.Windows.Forms.TextBox textBox25;
+        private System.Windows.Forms.TextBox textBox26;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.TrackBar trackBar6;
+        private System.Windows.Forms.TrackBar trackBar7;
+        private System.Windows.Forms.TrackBar trackBar8;
+        private System.Windows.Forms.TrackBar trackBar9;
+        private System.Windows.Forms.TrackBar trackBar10;
+        private System.Windows.Forms.TrackBar trackBar11;
+        private System.Windows.Forms.TrackBar trackBar12;
     }
 }
 
