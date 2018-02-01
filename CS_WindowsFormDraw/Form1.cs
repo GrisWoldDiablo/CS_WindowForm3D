@@ -17,7 +17,7 @@ namespace CS_WindowsFormDraw
         private int penWitdh = 5;
         static float theta = 0, phi = 0;
 
-        static double[] 
+        static double[]
             point1 = { 25, 50, 0 },
             point2 = { 25, 200, 0 },
             point3 = { 150, 200, 0 },
@@ -33,9 +33,13 @@ namespace CS_WindowsFormDraw
             yAxisU = { 0, 500, 0 },
             yAxisD = { 0, -500, 0 },
             origin = { 0, 0, 0 },
-            camera = { -900, -500, -100 },//-900,-500,-100
+            camera = { 0, 0, -100 },//0,0,-100
             camV = { 1, -3.14, -2.6 },//1,-3.14,-2.6
-            viewerV = { 900,800,-1000 };//900,800,-1000
+            viewerV = { 0, 0, -1000 },//0,0,-1000
+            textX = {15,0,0 },
+            textY = {0,15,0 },
+            textZ = {0,0,15 };
+
         double scaleFactor = 2.0;
         double translateX = 0, translateY = 0, translateZ = 0;
 
@@ -55,6 +59,11 @@ namespace CS_WindowsFormDraw
         static PointF origin2;
         static PointF cameraF;
         static PointF viewerF;
+        static PointF textXX;
+        static PointF textYY;
+        static PointF textZZ;
+
+
 
         bool changed18 = false, changed19 = false, changed20 = false, changed21 = false, changed22 = false, changed23 = false;
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -1019,6 +1028,8 @@ namespace CS_WindowsFormDraw
             gra.DrawLine(new Pen(Color.Black, penWidth), points[6], points[7]);
             gra.DrawLine(new Pen(Color.Black, penWidth), points[7], points[4]);
 
+            gra.DrawString("X", new Font("Arial", 16), new SolidBrush(Color.Black), textXX);
+
 
             //gra.DrawLine(new Pen(Color.Red, 5), points[14], viewerF);
 
@@ -1103,8 +1114,8 @@ namespace CS_WindowsFormDraw
 
                 double[] tempCoord = { pointX, pointY, pointZ, 1 };
                 double[] tempMatFustrum = multiply4x1Matrix(fustrum, tempCoord);
-                temporaryPF.X = (float)(tempMatFustrum[0] / tempMatFustrum[3]);
-                temporaryPF.Y = (float)(tempMatFustrum[1] / tempMatFustrum[3]);
+                temporaryPF.X = (float)(tempMatFustrum[0] / tempMatFustrum[3])+this.Width/2;
+                temporaryPF.Y = (float)(tempMatFustrum[1] / tempMatFustrum[3])+this.Height/2;
             }
 
             return temporaryPF;
@@ -1154,7 +1165,9 @@ namespace CS_WindowsFormDraw
             cameraF = pointTransfer(camera);
             viewerF = pointTransfer(viewerV);
 
-
+            textXX = pointTransfer(textX);
+            textYY = pointTransfer(textY);
+            textZZ = pointTransfer(textZ);
 
             myPoints[0] = point21;
             myPoints[1] = point22;

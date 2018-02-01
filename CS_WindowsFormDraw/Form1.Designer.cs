@@ -589,8 +589,8 @@
             // trackBar7
             // 
             this.trackBar7.Location = new System.Drawing.Point(20, 298);
-            this.trackBar7.Maximum = 1000;
-            this.trackBar7.Minimum = -1000;
+            this.trackBar7.Maximum = 2000;
+            this.trackBar7.Minimum = -2000;
             this.trackBar7.Name = "trackBar7";
             this.trackBar7.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBar7.Size = new System.Drawing.Size(45, 104);
@@ -622,8 +622,8 @@
             // trackBar10
             // 
             this.trackBar10.Location = new System.Drawing.Point(20, 466);
-            this.trackBar10.Maximum = 1000;
-            this.trackBar10.Minimum = -1000;
+            this.trackBar10.Maximum = 2000;
+            this.trackBar10.Minimum = -2000;
             this.trackBar10.Name = "trackBar10";
             this.trackBar10.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBar10.Size = new System.Drawing.Size(45, 104);
