@@ -33,9 +33,11 @@ namespace CS_WindowsFormDraw
             yAxisU = { 0, 500, 0 },
             yAxisD = { 0, -500, 0 },
             origin = { 0, 0, 0 },
-            camera = {-500, -500, -500 },
-            camV = { 0, 1, 0 },
-            viewerV = { 500, 500, 500 };
+            camera = { -900, -500, -100 },//-900,-500,-100
+            camV = { 1, -3.14, -2.6 },//1,-3.14,-2.6
+            viewerV = { 900,800,-1000 };//900,800,-1000
+        double scaleFactor = 2.0;
+        double translateX = 0, translateY = 0, translateZ = 0;
 
         static PointF point21;
         static PointF point22;
@@ -441,9 +443,12 @@ namespace CS_WindowsFormDraw
 
         private void button8_Click(object sender, EventArgs e)
         {
-            camV[0] = double.Parse(textBox24.Text);
-            camV[1] = double.Parse(textBox25.Text);
-            camV[2] = double.Parse(textBox26.Text);
+            trackBar4.Value = (int)(camV[0]*100.0);
+            trackBar5.Value = (int)(camV[1]*100.0);
+            trackBar6.Value = (int)(camV[2]*100.0);
+            textBox24.Text = camV[0].ToString();
+            textBox25.Text = camV[1].ToString();
+            textBox26.Text = camV[2].ToString();
         }
 
         private void trackBar4_Scroll(object sender, EventArgs e)
@@ -488,6 +493,9 @@ namespace CS_WindowsFormDraw
         private void trackBar7_Scroll(object sender, EventArgs e)
         {
             camera[0] = trackBar7.Value;
+            viewerV[0] = -trackBar7.Value;
+            trackBar10.Value = (int)viewerV[0];
+            textBox21.Text = (trackBar10.Value).ToString();
             textBox18.Text = (trackBar7.Value).ToString();
             updateSquare();
             this.Refresh();
@@ -514,7 +522,14 @@ namespace CS_WindowsFormDraw
 
         private void trackBar10_Scroll(object sender, EventArgs e)
         {
+
+            camera[0] = -trackBar10.Value;
             viewerV[0] = trackBar10.Value;
+            trackBar7.Value = (int)camera[0];
+            textBox18.Text = (trackBar7.Value).ToString();
+
+            viewerV[0] = trackBar10.Value;
+
             textBox21.Text = (trackBar10.Value).ToString();
             updateSquare();
             this.Refresh();
@@ -537,6 +552,107 @@ namespace CS_WindowsFormDraw
             updateSquare();
             this.Refresh();
             DrawSquare(myPoints);
+        }
+
+        private void trackBar16_Scroll(object sender, EventArgs e)
+        {
+            
+            if (trackBar16.Value > 0)
+            {
+                translateZ = 1f;
+            }
+            else
+            {
+                translateZ = -1f;
+            }
+            trackBar16.Value = 0;
+            translateOn(point1);
+            translateOn(point2);
+            translateOn(point3);
+            translateOn(point4);
+            translateOn(point5);
+            translateOn(point6);
+            translateOn(point7);
+            translateOn(point8);
+            updateSquare();
+            translateZ = 0;
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar15_Scroll(object sender, EventArgs e)
+        {
+            if (trackBar15.Value > 0)
+            {
+                translateX = 2.0;
+            }
+            else
+            {
+                translateX = -2.0;
+            }
+            trackBar15.Value = 0;
+            translateOn(point1);
+            translateOn(point2);
+            translateOn(point3);
+            translateOn(point4);
+            translateOn(point5);
+            translateOn(point6);
+            translateOn(point7);
+            translateOn(point8);
+            updateSquare();
+            translateX = 0;
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar14_Scroll(object sender, EventArgs e)
+        {
+            if (trackBar14.Value > 0)
+            {
+                translateY = 1f;
+            }
+            else
+            {
+                translateY = -1f;
+            }
+            trackBar14.Value = 0;
+            translateOn(point1);
+            translateOn(point2);
+            translateOn(point3);
+            translateOn(point4);
+            translateOn(point5);
+            translateOn(point6);
+            translateOn(point7);
+            translateOn(point8);
+            updateSquare();
+            translateY = 0;
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar13_Scroll(object sender, EventArgs e)
+        {
+            scaleFactor = trackBar13.Value / 100.0;
+            textBox27.Text = scaleFactor.ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+
+        }
+        private void translateOn(double[] pointToTranslate)
+        {
+            double[,] translate =
+            {
+                { 1,0,0,translateX },
+                {0,1,0,translateY },
+                {0,0,1,translateZ },
+                {0,0,0,1 }
+            };
+            double[] tempMatrix = multiply4x1Matrix(translate, new double[] { pointToTranslate[0], pointToTranslate[1], pointToTranslate[2], 1 });
+
+            pointToTranslate[0] = tempMatrix[0];
+            pointToTranslate[1] = tempMatrix[1];
+            pointToTranslate[2] = tempMatrix[2];
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
@@ -904,7 +1020,7 @@ namespace CS_WindowsFormDraw
             gra.DrawLine(new Pen(Color.Black, penWidth), points[7], points[4]);
 
 
-            gra.DrawLine(new Pen(Color.Red, 5), points[14], viewerF);
+            //gra.DrawLine(new Pen(Color.Red, 5), points[14], viewerF);
 
             gra.Dispose();
             blackPen.Dispose();
@@ -931,6 +1047,16 @@ namespace CS_WindowsFormDraw
                 {0, 0, 1 }
             };
 
+            double fovX = 60, fovY = 60, zNear = 10, zFar = 200;
+
+            //double[,] fustrum =
+            //{
+            //    {Math.Atan(fovX/2.0),0,0,0 },
+            //    {0,Math.Atan(fovY/2.0),0,0 },
+            //    {0,0,-((viewerV[2]+viewerV[1])/(viewerV[2]-viewerV[1])),-((2*(viewerV[1]*viewerV[2]))/(viewerV[2]-viewerV[1])) },
+            //    {0,0,-1,0 }
+            //};
+
             double[,] fustrum =
             {
                 {1,0,-viewerV[0]/viewerV[2],0 },
@@ -938,6 +1064,15 @@ namespace CS_WindowsFormDraw
                 {0,0,1,0 },
                 {0,0,-1/viewerV[2],1 }
             };
+            double[,] scaling =
+            {
+                { scaleFactor,0,0,0 },
+                {0,scaleFactor,0,0 },
+                {0,0,scaleFactor,0 },
+                {0,0,0,1 }
+            };
+            
+
             PointF temporaryPF;
             if (checkBox7.Checked)
             {
@@ -949,11 +1084,23 @@ namespace CS_WindowsFormDraw
                
                 double[,] tempMat1 = multiply3x3Matrix(pers1, pers2);
                 double[,] tempMat2 = multiply3x3Matrix(tempMat1, pers3);
-                double pointX = (tempMat2[0, 0] * (pointT[0] - camera[0])) + (tempMat2[0, 1] * (pointT[1] - camera[1])) + (tempMat2[0, 2] * (pointT[2] - camera[2]));
-                double pointY = (tempMat2[1, 0] * (pointT[0] - camera[0])) + (tempMat2[1, 1] * (pointT[1] - camera[1])) + (tempMat2[1, 2] * (pointT[2] - camera[2]));
-                double pointZ = (tempMat2[2, 0] * (pointT[0] - camera[0])) + (tempMat2[2, 1] * (pointT[1] - camera[1])) + (tempMat2[2, 2] * (pointT[2] - camera[2]));
+                //double pointX = (tempMat2[0, 0] * (pointT[0] - camera[0])) + (tempMat2[0, 1] * (pointT[1] - camera[1])) + (tempMat2[0, 2] * (pointT[2] - camera[2]));
+                //double pointY = (tempMat2[1, 0] * (pointT[0] - camera[0])) + (tempMat2[1, 1] * (pointT[1] - camera[1])) + (tempMat2[1, 2] * (pointT[2] - camera[2]));
+                //double pointZ = (tempMat2[2, 0] * (pointT[0] - camera[0])) + (tempMat2[2, 1] * (pointT[1] - camera[1])) + (tempMat2[2, 2] * (pointT[2] - camera[2]));
+                double pointX = (tempMat2[0, 0] * (pointT[0])) + (tempMat2[0, 1] * (pointT[1])) + (tempMat2[0, 2] * (pointT[2]));
+                double pointY = (tempMat2[1, 0] * (pointT[0])) + (tempMat2[1, 1] * (pointT[1])) + (tempMat2[1, 2] * (pointT[2]));
+                double pointZ = (tempMat2[2, 0] * (pointT[0])) + (tempMat2[2, 1] * (pointT[1])) + (tempMat2[2, 2] * (pointT[2]));
+                double[] tempXYZ = multiply4x1Matrix(scaling, new double[] { pointX, pointY, pointZ, 1 });
+                pointX = tempXYZ[0];
+                pointY = tempXYZ[1];
+                pointZ = tempXYZ[2];
 
-                temporaryPF = new PointF((float)(-Math.Sin(theta) * pointX + Math.Cos(theta) * pointY) + (this.Width / 2), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointX + (-Math.Sin(theta) * Math.Sin(phi)) * pointY + Math.Cos(phi) * pointZ) + (this.Height / 2));
+                pointX -= camera[0];
+                pointY -= camera[1];
+                pointZ -= camera[2];
+                //temporaryPF = new PointF((float)(-Math.Sin(theta) * pointX + Math.Cos(theta) * pointY) + (this.Width / 2), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointX + (-Math.Sin(theta) * Math.Sin(phi)) * pointY + Math.Cos(phi) * pointZ) + (this.Height / 2));
+                temporaryPF = new PointF((float)(-Math.Sin(theta) * pointX + Math.Cos(theta) * pointY), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointX + (-Math.Sin(theta) * Math.Sin(phi)) * pointY + Math.Cos(phi) * pointZ));
+
                 double[] tempCoord = { pointX, pointY, pointZ, 1 };
                 double[] tempMatFustrum = multiply4x1Matrix(fustrum, tempCoord);
                 temporaryPF.X = (float)(tempMatFustrum[0] / tempMatFustrum[3]);
@@ -978,10 +1125,10 @@ namespace CS_WindowsFormDraw
         {
             double[] tempMatResult =
             {
-                (mat1[0,0]*mat2[0]) + (mat1[0,1]*mat2[1]) + (mat1[0,2]*mat2[2]),
-                (mat1[1,0]*mat2[0]) + (mat1[1,1]*mat2[1]) + (mat1[1,2]*mat2[2]),
-                (mat1[2,0]*mat2[0]) + (mat1[2,1]*mat2[1]) + (mat1[2,2]*mat2[2]),
-                (mat1[3,0]*mat2[0]) + (mat1[3,1]*mat2[1]) + (mat1[3,2]*mat2[2])
+                (mat1[0,0]*mat2[0]) + (mat1[0,1]*mat2[1]) + (mat1[0,2]*mat2[2])+ (mat1[0,3]*mat2[3]),
+                (mat1[1,0]*mat2[0]) + (mat1[1,1]*mat2[1]) + (mat1[1,2]*mat2[2])+ (mat1[1,3]*mat2[3]),
+                (mat1[2,0]*mat2[0]) + (mat1[2,1]*mat2[1]) + (mat1[2,2]*mat2[2])+ (mat1[2,3]*mat2[3]),
+                (mat1[3,0]*mat2[0]) + (mat1[3,1]*mat2[1]) + (mat1[3,2]*mat2[2])+ (mat1[3,3]*mat2[3])
             };
             return tempMatResult;
         }
