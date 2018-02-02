@@ -35,10 +35,13 @@ namespace CS_WindowsFormDraw
             origin = { 0, 0, 0 },
             camera = { 0, 0, -100 },//0,0,-100
             camV = { 1, -3.14, -2.6 },//1,-3.14,-2.6
-            viewerV = { 0, 0, -1000 },//0,0,-1000
-            textX = {15,0,0 },
-            textY = {0,15,0 },
-            textZ = {0,0,15 };
+            viewerV = { 0, 0, -1000,1 },//0,0,-1000
+            textXp = {30,0,0 },
+            textYp = {0,30,0 },
+            textZp = {0,0,30 }, 
+            textXm = { -50, 0, 0 },
+            textYm = { 0, -50, 0 },
+            textZm = { 0, 0, -50 };
 
         double scaleFactor = 2.0;
         double translateX = 0, translateY = 0, translateZ = 0;
@@ -59,9 +62,12 @@ namespace CS_WindowsFormDraw
         static PointF origin2;
         static PointF cameraF;
         static PointF viewerF;
-        static PointF textXX;
-        static PointF textYY;
-        static PointF textZZ;
+        static PointF textXXp;
+        static PointF textYYp;
+        static PointF textZZp;
+        static PointF textXXm;
+        static PointF textYYm;
+        static PointF textZZm;
 
 
 
@@ -524,6 +530,15 @@ namespace CS_WindowsFormDraw
         {
             camera[2] = trackBar9.Value;
             textBox20.Text = (trackBar9.Value).ToString();
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
+        private void trackBar17_Scroll(object sender, EventArgs e)
+        {
+            viewerV[3] = trackBar17.Value/100.0;
+            textBox28.Text = (trackBar17.Value/100.0).ToString();
             updateSquare();
             this.Refresh();
             DrawSquare(myPoints);
@@ -1027,10 +1042,17 @@ namespace CS_WindowsFormDraw
             gra.DrawLine(new Pen(Color.Black, penWidth), points[5], points[6]);
             gra.DrawLine(new Pen(Color.Black, penWidth), points[6], points[7]);
             gra.DrawLine(new Pen(Color.Black, penWidth), points[7], points[4]);
-
-            gra.DrawString("X", new Font("Arial", 16), new SolidBrush(Color.Black), textXX);
-
-
+            int fontsize = (int)(10 * scaleFactor);
+            if (fontsize <= 0)
+            {
+                fontsize = 1;
+            }
+            gra.DrawString("+X", new Font("Arial", fontsize), new SolidBrush(Color.Black), textXXp);
+            gra.DrawString("+Y", new Font("Arial", fontsize), new SolidBrush(Color.Black), textYYp);
+            gra.DrawString("+Z", new Font("Arial", fontsize), new SolidBrush(Color.Black), textZZp);
+            gra.DrawString("-X", new Font("Arial", fontsize), new SolidBrush(Color.Black), textXXm);
+            gra.DrawString("-Y", new Font("Arial", fontsize), new SolidBrush(Color.Black), textYYm);
+            gra.DrawString("-Z", new Font("Arial", fontsize), new SolidBrush(Color.Black), textZZm);
             //gra.DrawLine(new Pen(Color.Red, 5), points[14], viewerF);
 
             gra.Dispose();
@@ -1057,30 +1079,29 @@ namespace CS_WindowsFormDraw
                 {-Math.Sin(camV[2]), Math.Cos(camV[2]), 0 },
                 {0, 0, 1 }
             };
-
-            double fovX = 60, fovY = 60, zNear = 10, zFar = 200;
-
+            //double S = 1 / (Math.Tan((viewerV[1] / 2) * (Math.PI / 180)));
             //double[,] fustrum =
             //{
-            //    {Math.Atan(fovX/2.0),0,0,0 },
-            //    {0,Math.Atan(fovY/2.0),0,0 },
-            //    {0,0,-((viewerV[2]+viewerV[1])/(viewerV[2]-viewerV[1])),-((2*(viewerV[1]*viewerV[2]))/(viewerV[2]-viewerV[1])) },
-            //    {0,0,-1,0 }
+            //    {S,0,0,0 },
+            //    {0,S,0,0 },
+            //    {0,0,-(viewerV[2]/(viewerV[2]-viewerV[3])),-1 },
+            //    {0,0,-((viewerV[2]*viewerV[3])/(viewerV[2]-viewerV[3])),0 }
             //};
 
             double[,] fustrum =
             {
-                {1,0,-viewerV[0]/viewerV[2],0 },
-                {0,1,-viewerV[1]/viewerV[2],0 },
-                {0,0,1,0 },
-                {0,0,-1/viewerV[2],1 }
+                {viewerV[3], 0, -viewerV[0]/viewerV[2], 0 },
+                {0, viewerV[3], -viewerV[1]/viewerV[2], 0 },
+                {0, 0,  1,                     0 },
+                {0, 0, -1/viewerV[2],          1 }
             };
+
             double[,] scaling =
             {
-                { scaleFactor,0,0,0 },
-                {0,scaleFactor,0,0 },
-                {0,0,scaleFactor,0 },
-                {0,0,0,1 }
+                {scaleFactor, 0,           0,           0 },
+                {0,           scaleFactor, 0,           0 },
+                {0,           0,           scaleFactor, 0 },
+                {0,           0,           0,           1 }
             };
             
 
@@ -1110,12 +1131,12 @@ namespace CS_WindowsFormDraw
                 pointY -= camera[1];
                 pointZ -= camera[2];
                 //temporaryPF = new PointF((float)(-Math.Sin(theta) * pointX + Math.Cos(theta) * pointY) + (this.Width / 2), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointX + (-Math.Sin(theta) * Math.Sin(phi)) * pointY + Math.Cos(phi) * pointZ) + (this.Height / 2));
-                temporaryPF = new PointF((float)(-Math.Sin(theta) * pointX + Math.Cos(theta) * pointY), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointX + (-Math.Sin(theta) * Math.Sin(phi)) * pointY + Math.Cos(phi) * pointZ));
-
+                //temporaryPF = new PointF((float)(-Math.Sin(theta) * pointX + Math.Cos(theta) * pointY), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointX + (-Math.Sin(theta) * Math.Sin(phi)) * pointY + Math.Cos(phi) * pointZ));
+                temporaryPF = new PointF();
                 double[] tempCoord = { pointX, pointY, pointZ, 1 };
                 double[] tempMatFustrum = multiply4x1Matrix(fustrum, tempCoord);
-                temporaryPF.X = (float)(tempMatFustrum[0] / tempMatFustrum[3])+this.Width/2;
-                temporaryPF.Y = (float)(tempMatFustrum[1] / tempMatFustrum[3])+this.Height/2;
+                temporaryPF.X = (float)(tempMatFustrum[0] / tempMatFustrum[3]) + this.Width / 2;
+                temporaryPF.Y = (float)(tempMatFustrum[1] / tempMatFustrum[3]) + this.Height / 2;
             }
 
             return temporaryPF;
@@ -1165,9 +1186,12 @@ namespace CS_WindowsFormDraw
             cameraF = pointTransfer(camera);
             viewerF = pointTransfer(viewerV);
 
-            textXX = pointTransfer(textX);
-            textYY = pointTransfer(textY);
-            textZZ = pointTransfer(textZ);
+            textXXp = pointTransfer(textXp);
+            textYYp = pointTransfer(textYp);
+            textZZp = pointTransfer(textZp);
+            textXXm = pointTransfer(textXm);
+            textYYm = pointTransfer(textYm);
+            textZZm = pointTransfer(textZm);
 
             myPoints[0] = point21;
             myPoints[1] = point22;
