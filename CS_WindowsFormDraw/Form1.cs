@@ -13,7 +13,7 @@ namespace CS_WindowsFormDraw
     public partial class Form1 : Form
     {
         int mPosX, mPosY;
-        double angleAlpha = 30;
+        double angleAlpha = 60;
         Graphics gra = null;
         private Point pS, pE;
         private int penWitdh = 5;
@@ -44,7 +44,7 @@ namespace CS_WindowsFormDraw
             textXm = { -50, 0, 0 },
             textYm = { 0, -50, 0 },
             textZm = { 0, 0, -50 },
-            camOri = { 1, 1000, 30 };
+            camOri = { 0, 0, 0 }; //{ 0.1, -1000, 0 }
 
         double scaleFactor = 2.0;
         double translateX = 0, translateY = 0, translateZ = 0;
@@ -1144,7 +1144,8 @@ namespace CS_WindowsFormDraw
             gra.DrawLine(new Pen(Color.Blue, penWidthAxes), points[8], points[14]);
             gra.DrawLine(new Pen(Color.IndianRed, penWidthAxes), points[14], points[11]);
             gra.DrawLine(new Pen(Color.Red, penWidthAxes), points[10], points[14]);
-
+            /////
+            
             gra.DrawLine(new Pen(Color.Black, penWidth), points[0], points[1]);
             gra.DrawLine(new Pen(Color.Black, penWidth), points[1], points[2]);
             gra.DrawLine(new Pen(Color.Black, penWidth), points[2], points[3]);
@@ -1159,7 +1160,8 @@ namespace CS_WindowsFormDraw
             gra.DrawLine(new Pen(Color.Black, penWidth), points[5], points[6]);
             gra.DrawLine(new Pen(Color.Black, penWidth), points[6], points[7]);
             gra.DrawLine(new Pen(Color.Black, penWidth), points[7], points[4]);
-
+            
+            
             //int fontsize = (int)(10 * scaleFactor);
             //if (fontsize <= 0)
             //{
@@ -1191,6 +1193,15 @@ namespace CS_WindowsFormDraw
                 {0,0,1.0,0 }
             };
             
+            double[,] cameraMatrix =
+            {
+                {0.512,-0.80,0,0.8 },
+                {0.512,0,0.8,1.6 },
+                {0.001,0,0,1 },
+                { 0, 0, 0, 0 }
+
+            };
+            
             double[,] pers1 =
             {
                 {1, 0, 0 },
@@ -1210,6 +1221,30 @@ namespace CS_WindowsFormDraw
                 {0, 0, 1 }
             };
 
+
+            double[,] camPersX =
+            {
+                { 1, 0,                 0,                0 },
+                { 0, Math.Cos(camV[0]), Math.Sin(camV[0]),0 },
+                { 0,-Math.Sin(camV[0]), Math.Cos(camV[0]),0 },
+                { 0, 0,                 0,                0 }
+            };
+            double[,] camPersY =
+            {
+                {    Math.Cos(camV[1]), 0, -Math.Sin(camV[1]), 0 },
+                { 0, 1,                 0,                     0 },
+                {    Math.Sin(camV[1]), 0,  Math.Cos(camV[1]), 0 },
+                { 0, 0,                 0,                     0 }
+            };
+            double[,] camPersZ =
+            {
+                { Math.Cos(camV[2]), Math.Sin(camV[2]), 0, camOri[0] },
+                {-Math.Sin(camV[2]), Math.Cos(camV[2]), 0, camOri[1] },
+                { 0,                 0,                 1, camOri[2] },
+                { 0,                 0,                 0, 0 }
+            };
+
+
             double[,] camOri1 =
             {
                 {1, 0, 0 },
@@ -1228,6 +1263,14 @@ namespace CS_WindowsFormDraw
                 {-Math.Sin(camOri[2]), Math.Cos(camOri[2]), 0 },
                 {0, 0, 1 }
             };
+            double x = camV[0], y = camV[1], z = camV[2], w = viewerV[3];
+            double[,] quaternionMat =
+            {
+                {1-(y*y)-(z*z),   x*y-z*w,          x*z+y*w,0 },
+                {x*y+z*w,         1-(x*x)-(z*z),    y*z-x*w ,0 },
+                {x*z-y*w,         y*z+x*w,          1-(x*x)-(y*y),0 },
+                { 0, 0,                 0,                     1}
+            };
 
             //double S = 1 / (Math.Tan((viewerV[1] / 2) * (Math.PI / 180)));
             //double[,] fustrum =
@@ -1240,8 +1283,8 @@ namespace CS_WindowsFormDraw
 
             double[,] fustrum =
             {
-                {1, 0,          -viewerV[0]/viewerV[2], 0 },
-                {0,          1, -viewerV[1]/viewerV[2], 0 },
+                {1,          0,         -viewerV[0]/viewerV[2],  0 },
+                {0,          1,         -viewerV[1]/viewerV[2],  0 },
                 {0,          0,          1,                      0 },
                 {0,          0,         -1/viewerV[2],           1 }
             };
@@ -1262,50 +1305,44 @@ namespace CS_WindowsFormDraw
                 return temporaryPF;
             }
             else
-            {   
+            {
 
                 //Origin
-                double[,] tempMat1 = multiply3x3Matrix(pers1, pers2);
-                double[,] tempMat2 = multiply3x3Matrix(tempMat1, pers3);
-                
+                //double[,] tempMat1 = multiply3x3Matrix(pers1, pers2);
+                //double[,] tempMat2 = multiply3x3Matrix(tempMat1, pers3);
+
+                double[,] tempMatCam = multiplyMats(multiplyMats(camPersX, camPersY), camPersZ);
+
                 double newPX = pointT[0] - camera[0];
                 double newPY = pointT[1] - camera[1];
                 double newPZ = pointT[2] - camera[2];
-                double pointX = (tempMat2[0, 0] * (newPX)) + (tempMat2[0, 1] * (newPY)) + (tempMat2[0, 2] * (newPZ));
-                double pointY = (tempMat2[1, 0] * (newPX)) + (tempMat2[1, 1] * (newPY)) + (tempMat2[1, 2] * (newPZ));
-                double pointZ = (tempMat2[2, 0] * (newPX)) + (tempMat2[2, 1] * (newPY)) + (tempMat2[2, 2] * (newPZ));
+                //double[] pointNewMat = multiply3x1Matrix(tempMat2,new double[] { newPX, newPY, newPZ });
 
-                //double[] tempXYZ = multiply4x1Matrix(scaling, new double[] { pointX, pointY, pointZ, 1 });
-                //pointX = tempXYZ[0];
-                //pointY = tempXYZ[1];
-                //pointZ = tempXYZ[2];
 
-                //Camera
-                //double[,] tempCamOri = multiply3x3Matrix(multiply3x3Matrix(camOri1, camOri2), camOri3);
-                //double newCamOriX = (tempCamOri[0, 0] * (pointX)) + (tempCamOri[0, 1] * (pointY)) + (tempCamOri[0, 2] * (pointZ));
-                //double newCamOriY = (tempCamOri[1, 0] * (pointX)) + (tempCamOri[1, 1] * (pointY)) + (tempCamOri[1, 2] * (pointZ));
-                //double newCamOriZ = (tempCamOri[2, 0] * (pointX)) + (tempCamOri[2, 1] * (pointY)) + (tempCamOri[2, 2] * (pointZ));
-                //pointX = newCamOriX;
-                //pointY = newCamOriY;
-                //pointZ = newCamOriZ;
+                //double[,] pointNewMatCam = multiplyMats(tempMatCam, new double[,] { { newPX }, { newPY }, { newPZ }, { 1 }  });
+                double[,] pointNewMatCam = multiplyMats(tempMatCam, new double[,] { { newPX }, { newPY }, { newPZ }, { 1 } });
 
-                //pointX -= camera[0];
-                //pointY -= camera[1];
-                //pointZ -= camera[2];
-                //temporaryPF = new PointF((float)(-Math.Sin(theta) * pointX + Math.Cos(theta) * pointY) + (this.Width / 2), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointX + (-Math.Sin(theta) * Math.Sin(phi)) * pointY + Math.Cos(phi) * pointZ) + (this.Height / 2));
-                //temporaryPF = new PointF((float)(-Math.Sin(theta) * pointX + Math.Cos(theta) * pointY), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointX + (-Math.Sin(theta) * Math.Sin(phi)) * pointY + Math.Cos(phi) * pointZ));
+
                 temporaryPF = new PointF();
-                double[] tempCoord = { pointX, pointY, pointZ, 1 };
-                double[] tempMatFustrum = multiply4x1Matrix(fustrum, tempCoord);
-                temporaryPF.X = (float)(tempMatFustrum[0] / tempMatFustrum[3]) + this.Width / 2;
-                temporaryPF.Y = (float)(tempMatFustrum[1] / tempMatFustrum[3]) + this.Height / 2;
 
-                //try this one
-                //double[] tryIt = multiply4x1Matrix(trueFostrum, new double[] { pointT[0], pointT[1], pointT[2], 1 });
-                //temporaryPF.X = (float)(tryIt[0] / ar * tryIt[2] * Math.Tan(angleAlpha / 2))+ this.Width / 2;
-                //temporaryPF.Y = (float)(tryIt[1] / tryIt[2] * Math.Tan(angleAlpha / 2)) + this.Height / 2;
+                //double[] tempCoord = { pointNewMat[0], pointNewMat[1], pointNewMat[2], 1 };
+                //double[] tempCoord = new double[] { newPX, newPY, newPZ, 1 };
+                //double[] tempMatFustrum = multiply4x1Matrix(fustrum, pointNewMatCam);
+                double[,] tempMatFustrum = multiplyMats(fustrum, pointNewMatCam);
+                temporaryPF.X = (float)(tempMatFustrum[0,0] / (tempMatFustrum[3,0])) + this.Width / 2;
+                temporaryPF.Y = (float)(tempMatFustrum[1,0] / (tempMatFustrum[3,0])) + this.Height / 2;
 
-                
+
+
+                //double[,] tryingNew = new double[,] { { 123,21,56,7 }, { 5,6,89,345}, { 5,53,9,8 }, { 0,3,6,7} };
+                //double[,] tryingNew2 = new double[1,2];
+                //double[,] theTry = multiplyMats(fustrum, tryingNew);
+                //double[,] the2try = multiply4x4Matrix(fustrum, tryingNew);
+                //int test = 3;
+                //double[,] tryingNew = new double[,] { { 1, 2, 3 }, { 1, 2, 3 } };
+                //double[,] tryingNew2 = new double[,] { { 4,9 }, { 1,6 }, { 5,7 }, { 21,4 }, { 3,4} };
+                //double[,] result = multiplyMats(tryingNew2, tryingNew);
+                //int test = 3;
             }
 
             return temporaryPF;
@@ -1322,16 +1359,83 @@ namespace CS_WindowsFormDraw
             };
             return tempMatResult;
         }
+
+        private double[] multiply3x1Matrix(double[,] mat1, double[] mat2)
+        {
+            double[] tempMatResult =
+            {
+                (mat1[0,0]*mat2[0])+(mat1[0,1]*mat2[1])+(mat1[0,2]*mat2[2]),
+                (mat1[1,0]*mat2[0])+(mat1[1,1]*mat2[1])+(mat1[1,2]*mat2[2]),
+                (mat1[2,0]*mat2[0])+(mat1[2,1]*mat2[1])+(mat1[2,2]*mat2[2])
+            };
+            
+            return tempMatResult;
+        }
+
+        private double[,] multiply4x4Matrix(double[,] mat1, double[,] mat2)
+        {
+            double[,] tempMatResult =
+            {
+                { (mat1[0,0]*mat2[0,0])+(mat1[0,1]*mat2[1,0])+(mat1[0,2]*mat2[2,0])+(mat1[0,3]*mat2[3,0]), (mat1[0,0]*mat2[0,1])+(mat1[0,1]*mat2[1,1])+(mat1[0,2]*mat2[2,1])+(mat1[0,3]*mat2[3,1]), (mat1[0,0]*mat2[0,2])+(mat1[0,1]*mat2[1,2])+(mat1[0,2]*mat2[2,2])+(mat1[0,3]*mat2[3,2]), (mat1[0,0]*mat2[0,3])+(mat1[0,1]*mat2[1,3])+(mat1[0,2]*mat2[2,3])+(mat1[0,3]*mat2[3,3]) },
+                { (mat1[1,0]*mat2[0,0])+(mat1[1,1]*mat2[1,0])+(mat1[1,2]*mat2[2,0])+(mat1[1,3]*mat2[3,0]), (mat1[1,0]*mat2[0,1])+(mat1[1,1]*mat2[1,1])+(mat1[1,2]*mat2[2,1])+(mat1[1,3]*mat2[3,1]), (mat1[1,0]*mat2[0,2])+(mat1[1,1]*mat2[1,2])+(mat1[1,2]*mat2[2,2])+(mat1[1,3]*mat2[3,2]), (mat1[1,0]*mat2[0,3])+(mat1[1,1]*mat2[1,3])+(mat1[1,2]*mat2[2,3])+(mat1[1,3]*mat2[3,3]) },
+                { (mat1[2,0]*mat2[0,0])+(mat1[2,1]*mat2[1,0])+(mat1[2,2]*mat2[2,0])+(mat1[2,3]*mat2[3,0]), (mat1[2,0]*mat2[0,1])+(mat1[2,1]*mat2[1,1])+(mat1[2,2]*mat2[2,1])+(mat1[2,3]*mat2[3,1]), (mat1[2,0]*mat2[0,2])+(mat1[2,1]*mat2[1,2])+(mat1[2,2]*mat2[2,2])+(mat1[2,3]*mat2[3,2]), (mat1[2,0]*mat2[0,3])+(mat1[2,1]*mat2[1,3])+(mat1[2,2]*mat2[2,3])+(mat1[2,3]*mat2[3,3]) },
+                { (mat1[3,0]*mat2[0,0])+(mat1[3,1]*mat2[1,0])+(mat1[3,2]*mat2[2,0])+(mat1[3,3]*mat2[3,0]), (mat1[3,0]*mat2[0,1])+(mat1[3,1]*mat2[1,1])+(mat1[3,2]*mat2[2,1])+(mat1[3,3]*mat2[3,1]), (mat1[3,0]*mat2[0,2])+(mat1[3,1]*mat2[1,2])+(mat1[3,2]*mat2[2,2])+(mat1[3,3]*mat2[3,2]), (mat1[3,0]*mat2[0,3])+(mat1[3,1]*mat2[1,3])+(mat1[3,2]*mat2[2,3])+(mat1[3,3]*mat2[3,3]) },
+            };
+            return tempMatResult;
+        }
         private double[] multiply4x1Matrix(double[,] mat1, double[] mat2)
+        {
+            double[] tempMatResult =
+            {
+                (mat1[0,0]*mat2[0]) + (mat1[0,1]*mat2[1]) + (mat1[0,2]*mat2[2]) + (mat1[0,3]*mat2[3]),
+                (mat1[1,0]*mat2[0]) + (mat1[1,1]*mat2[1]) + (mat1[1,2]*mat2[2]) + (mat1[1,3]*mat2[3]),
+                (mat1[2,0]*mat2[0]) + (mat1[2,1]*mat2[1]) + (mat1[2,2]*mat2[2]) + (mat1[2,3]*mat2[3]),
+                (mat1[3,0]*mat2[0]) + (mat1[3,1]*mat2[1]) + (mat1[3,2]*mat2[2]) + (mat1[3,3]*mat2[3])
+            };
+            return tempMatResult;
+        }
+
+        private double[] multiply43x1Matrix(double[,] mat1, double[] mat2)
         {
             double[] tempMatResult =
             {
                 (mat1[0,0]*mat2[0]) + (mat1[0,1]*mat2[1]) + (mat1[0,2]*mat2[2])+ (mat1[0,3]*mat2[3]),
                 (mat1[1,0]*mat2[0]) + (mat1[1,1]*mat2[1]) + (mat1[1,2]*mat2[2])+ (mat1[1,3]*mat2[3]),
                 (mat1[2,0]*mat2[0]) + (mat1[2,1]*mat2[1]) + (mat1[2,2]*mat2[2])+ (mat1[2,3]*mat2[3]),
-                (mat1[3,0]*mat2[0]) + (mat1[3,1]*mat2[1]) + (mat1[3,2]*mat2[2])+ (mat1[3,3]*mat2[3])
             };
             return tempMatResult;
+        }
+
+        private double[,] multiplyMats(double[,] mat1,double[,] mat2)
+        {
+            if (mat1.GetLength(1) != mat2.GetLength(0))
+            {
+                MessageBox.Show(
+                    "Can't multiple a " + mat1.GetLength(0).ToString() + "x" + mat1.GetLength(1).ToString() + " to a " + mat2.GetLength(0).ToString() + "x" + mat2.GetLength(1).ToString() + "matrix",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error // for Warning  
+                    //MessageBoxIcon.Error // for Error 
+                    //MessageBoxIcon.Information  // for Information
+                    //MessageBoxIcon.Question // for Question
+                    );
+
+                Environment.Exit(0);
+            }
+            double[,] newMat = new double[mat1.GetLength(0), mat2.GetLength(1)];
+
+            for (int i = 0; i < newMat.GetLength(0); i++)//0
+            {
+                for (int j = 0; j < mat2.GetLength(1); j++)//0
+                {
+                    for (int k = 0; k < mat2.GetLength(0); k++)//0
+                    {
+                        newMat[i, j] += mat1[i, k] * mat2[k, j];
+                    }
+                }
+            }
+
+            return newMat;
         }
 
         private void updateSquare()
@@ -1379,11 +1483,6 @@ namespace CS_WindowsFormDraw
             myPoints[14] = origin2;
 
 
-        }
-
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {
-            
         }
     }
 }

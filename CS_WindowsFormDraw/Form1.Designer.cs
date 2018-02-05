@@ -743,8 +743,8 @@
             // trackBar18
             // 
             this.trackBar18.Location = new System.Drawing.Point(260, 692);
-            this.trackBar18.Maximum = 5000;
-            this.trackBar18.Minimum = -5000;
+            this.trackBar18.Maximum = 1000;
+            this.trackBar18.Minimum = -1000;
             this.trackBar18.Name = "trackBar18";
             this.trackBar18.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBar18.Size = new System.Drawing.Size(45, 77);
@@ -754,8 +754,8 @@
             // trackBar19
             // 
             this.trackBar19.Location = new System.Drawing.Point(316, 692);
-            this.trackBar19.Maximum = 5000;
-            this.trackBar19.Minimum = -5000;
+            this.trackBar19.Maximum = 1000;
+            this.trackBar19.Minimum = -1000;
             this.trackBar19.Name = "trackBar19";
             this.trackBar19.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBar19.Size = new System.Drawing.Size(45, 77);
@@ -963,7 +963,6 @@
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
