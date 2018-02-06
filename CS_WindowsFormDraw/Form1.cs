@@ -7,11 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace CS_WindowsFormDraw
 {
     public partial class Form1 : Form
     {
+        Matrix yes = new Matrix();
         int mPosX, mPosY;
         double angleAlpha = 60;
         Graphics gra = null;
@@ -1339,15 +1341,14 @@ namespace CS_WindowsFormDraw
                 //double[,] theTry = multiplyMats(fustrum, tryingNew);
                 //double[,] the2try = multiply4x4Matrix(fustrum, tryingNew);
                 //int test = 3;
-                //double[,] tryingNew = new double[,] { { 1, 2, 3 }, { 1, 2, 3 } };
-                //double[,] tryingNew2 = new double[,] { { 4,9 }, { 1,6 }, { 5,7 }, { 21,4 }, { 3,4} };
-                //double[,] result = multiplyMats(tryingNew2, tryingNew);
-                //int test = 3;
+                double[,] tryingNew = new double[,] { { 1, 6, 3,8 } };
+                double[,] tryingNew2 = new double[,] { { 4}, { 1 }, { 2 }, { 3 }};
+                double[,] result = multiplyMats(tryingNew2, tryingNew);
+                int test = 3;
+
             }
 
             return temporaryPF;
-
-
         }
         private double[,] multiply3x3Matrix(double[,] mat1,double[,] mat2)
         {
