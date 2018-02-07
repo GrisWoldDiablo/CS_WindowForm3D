@@ -13,9 +13,9 @@ namespace CS_WindowsFormDraw
 {
     public partial class Form1 : Form
     {
-        Matrix yes = new Matrix();
+
         int mPosX, mPosY;
-        double angleAlpha = 60;
+        double angleAlpha = 90;
         Graphics gra = null;
         private Point pS, pE;
         private int penWitdh = 5;
@@ -39,14 +39,14 @@ namespace CS_WindowsFormDraw
             origin = { 0, 0, 0 },
             camera = { 0, 0, 0 },//0,0,-100
             camV = { -2, 0, 0 },//1,-3.14,-2.6
-            viewerV = { 0, 0, -1000,1 },//0,0,-1000
+            viewerV = { 500, 500, 500,70 },//0,0,-1000
             textXp = {30,0,0 },
             textYp = {0,30,0 },
             textZp = {0,0,30 }, 
             textXm = { -50, 0, 0 },
             textYm = { 0, -50, 0 },
             textZm = { 0, 0, -50 },
-            camOri = { 0, 0, 0 }; //{ 0.1, -1000, 0 }
+            camOri = { 0, 1000, 0 }; //{ 0.1, -1000, 0 }
 
         double scaleFactor = 2.0;
         double translateX = 0, translateY = 0, translateZ = 0;
@@ -74,6 +74,8 @@ namespace CS_WindowsFormDraw
         static PointF textYYm;
         static PointF textZZm;
 
+
+        Vector4f cameraPosition = new Vector4f(new float[] { (float)viewerV[0], (float)viewerV[1], (float)viewerV[2], 1 });
 
 
         bool changed18 = false, changed19 = false, changed20 = false, changed21 = false, changed22 = false, changed23 = false;
@@ -766,6 +768,16 @@ namespace CS_WindowsFormDraw
             DrawSquare(myPoints);
         }
 
+        private void textBox39_KeyDown(object sender, KeyEventArgs e)
+        {
+            textBox36.Text += e.KeyCode.ToString();
+        }
+
+        private void textBox39_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void trackBar13_Scroll(object sender, EventArgs e)
         {
             scaleFactor = trackBar13.Value / 100.0;
@@ -1182,48 +1194,45 @@ namespace CS_WindowsFormDraw
         }
         private PointF pointTransfer(double[] pointT)
         {
-            double ar = this.Width / this.Height;
-            double a = 1.0 / (ar*Math.Tan(angleAlpha / 2.0));
-            double d = 1.0 / (Math.Tan(angleAlpha / 2.0));
-            double nearZ = camOri[0];
-            double farZ = camOri[1];
-            double[,] trueFostrum =
+            float ar = (float)this.Width / (float)this.Height;
+            float nearZ = (float)camOri[0];
+            float farZ = (float)camOri[1];
+
+            float FOV = (float)viewerV[3];
+            Vector4f cameraPos = new Vector4f(new float[] { (float)viewerV[0], (float)viewerV[1], (float)viewerV[2], 1});
+            Vector4f lookPos = new Vector4f(new float[] { (float)camera[0], (float)camera[1], (float)camera[2], 1 });
+            Vector4f upPos = new Vector4f(new float[] { 0, 0, 1, 1 });
+            float vAngle = (float)camV[0];
+            float hAngle = (float)camV[2];
+            Vector4f direction = new Vector4f(new float[]
             {
-                {a,0,0,0 },
-                {0,d,0,0 },
-                {0,0,-(nearZ-farZ)/nearZ-farZ,(2*farZ*nearZ)/nearZ-farZ },
-                {0,0,1.0,0 }
-            };
+                (float)(Math.Cos(vAngle) * Math.Sin(hAngle)),
+                (float)(Math.Sin(vAngle)),
+                (float)(Math.Cos(vAngle) * Math.Cos(hAngle)),
+                1
+            });
+
+            Vector4f right = new Vector4f(new float[]
+            {
+                (float)(Math.Sin(hAngle - Math.PI/2.0)),
+                0,
+                (float)(Math.Cos(hAngle - Math.PI/2.0)),
+                1
+            });
+            Vector4f upHead = GetCross(right, direction);
+
+            Matrix4f viewMat = GetView(cameraPos, cameraPos+direction, upPos);
+
+            Matrix4f model = new Matrix4f(1.0f);
+
+            Matrix4f projection = GetPerspective(FOV, ar, nearZ, farZ);
+
+            Matrix4f mainMatrix = projection * viewMat * model;
             
-            double[,] cameraMatrix =
-            {
-                {0.512,-0.80,0,0.8 },
-                {0.512,0,0.8,1.6 },
-                {0.001,0,0,1 },
-                { 0, 0, 0, 0 }
 
-            };
+                       
             
-            double[,] pers1 =
-            {
-                {1, 0, 0 },
-                {0, Math.Cos(camV[0]), Math.Sin(camV[0]) },
-                {0, -Math.Sin(camV[0]), Math.Cos(camV[0]) }
-            };
-            double[,] pers2 =
-            {
-                {Math.Cos(camV[1]), 0, -Math.Sin(camV[1]) },
-                {0, 1, 0 },
-                {Math.Sin(camV[1]), 0, Math.Cos(camV[1]) }
-            };
-            double[,] pers3 =
-            {
-                {Math.Cos(camV[2]), Math.Sin(camV[2]), 0 },
-                {-Math.Sin(camV[2]), Math.Cos(camV[2]), 0 },
-                {0, 0, 1 }
-            };
-
-
+            
             double[,] camPersX =
             {
                 { 1, 0,                 0,                0 },
@@ -1308,44 +1317,37 @@ namespace CS_WindowsFormDraw
             }
             else
             {
+                //////////////////////
+                ////Origin
+                ////double[,] tempMat1 = multiply3x3Matrix(pers1, pers2);
+                ////double[,] tempMat2 = multiply3x3Matrix(tempMat1, pers3);
 
-                //Origin
-                //double[,] tempMat1 = multiply3x3Matrix(pers1, pers2);
-                //double[,] tempMat2 = multiply3x3Matrix(tempMat1, pers3);
+                //double[,] tempMatCam = multiplyMats(multiplyMats(camPersX, camPersY), camPersZ);
 
-                double[,] tempMatCam = multiplyMats(multiplyMats(camPersX, camPersY), camPersZ);
-
-                double newPX = pointT[0] - camera[0];
-                double newPY = pointT[1] - camera[1];
-                double newPZ = pointT[2] - camera[2];
-                //double[] pointNewMat = multiply3x1Matrix(tempMat2,new double[] { newPX, newPY, newPZ });
-
-
-                //double[,] pointNewMatCam = multiplyMats(tempMatCam, new double[,] { { newPX }, { newPY }, { newPZ }, { 1 }  });
-                double[,] pointNewMatCam = multiplyMats(tempMatCam, new double[,] { { newPX }, { newPY }, { newPZ }, { 1 } });
+                //double newPX = pointT[0] - camera[0];
+                //double newPY = pointT[1] - camera[1];
+                //double newPZ = pointT[2] - camera[2];
+                ////double[] pointNewMat = multiply3x1Matrix(tempMat2,new double[] { newPX, newPY, newPZ });
 
 
+                ////double[,] pointNewMatCam = multiplyMats(tempMatCam, new double[,] { { newPX }, { newPY }, { newPZ }, { 1 }  });
+                //double[,] pointNewMatCam = multiplyMats(tempMatCam, new double[,] { { newPX }, { newPY }, { newPZ }, { 1 } });
+
+
+                //temporaryPF = new PointF();
+
+                ////double[] tempCoord = { pointNewMat[0], pointNewMat[1], pointNewMat[2], 1 };
+                ////double[] tempCoord = new double[] { newPX, newPY, newPZ, 1 };
+                ////double[] tempMatFustrum = multiply4x1Matrix(fustrum, pointNewMatCam);
+                //double[,] tempMatFustrum = multiplyMats(fustrum, pointNewMatCam);
+                //temporaryPF.X = (float)(tempMatFustrum[0,0] / (tempMatFustrum[3,0])) + this.Width / 2;
+                //temporaryPF.Y = (float)(tempMatFustrum[1,0] / (tempMatFustrum[3,0])) + this.Height / 2;
+                ////////////////////////
+                float halfTanFOV = (float)Math.Tan((Math.PI * (FOV / 2.0) / 180.0));
+                Vector4f result = mainMatrix * (new Vector4f(new float[] { (float)pointT[0], (float)pointT[1], (float)pointT[2], 1.0f }));
                 temporaryPF = new PointF();
-
-                //double[] tempCoord = { pointNewMat[0], pointNewMat[1], pointNewMat[2], 1 };
-                //double[] tempCoord = new double[] { newPX, newPY, newPZ, 1 };
-                //double[] tempMatFustrum = multiply4x1Matrix(fustrum, pointNewMatCam);
-                double[,] tempMatFustrum = multiplyMats(fustrum, pointNewMatCam);
-                temporaryPF.X = (float)(tempMatFustrum[0,0] / (tempMatFustrum[3,0])) + this.Width / 2;
-                temporaryPF.Y = (float)(tempMatFustrum[1,0] / (tempMatFustrum[3,0])) + this.Height / 2;
-
-
-
-                //double[,] tryingNew = new double[,] { { 123,21,56,7 }, { 5,6,89,345}, { 5,53,9,8 }, { 0,3,6,7} };
-                //double[,] tryingNew2 = new double[1,2];
-                //double[,] theTry = multiplyMats(fustrum, tryingNew);
-                //double[,] the2try = multiply4x4Matrix(fustrum, tryingNew);
-                //int test = 3;
-                double[,] tryingNew = new double[,] { { 1, 6, 3,8 } };
-                double[,] tryingNew2 = new double[,] { { 4}, { 1 }, { 2 }, { 3 }};
-                double[,] result = multiplyMats(tryingNew2, tryingNew);
-                int test = 3;
-
+                temporaryPF.X = (float)(result.GetValue(0) / (result.GetValue(2) * halfTanFOV)) + this.Width / 2;
+                temporaryPF.Y = (float)(result.GetValue(1) / (result.GetValue(2) * halfTanFOV)) + this.Height / 2;
             }
 
             return temporaryPF;
@@ -1485,5 +1487,67 @@ namespace CS_WindowsFormDraw
 
 
         }
+
+        private Vector4f GetCross(Vector4f left, Vector4f right)
+        {
+            Vector4f result = new Vector4f(new float[] 
+            {
+                left.GetValue(1) * right.GetValue(2) - right.GetValue(1) * left.GetValue(2),
+                left.GetValue(2) * right.GetValue(0) - right.GetValue(2) * left.GetValue(0),
+                left.GetValue(0) * right.GetValue(1) - right.GetValue(0) * left.GetValue(1),
+                1.0f
+            });
+
+            return result;
+        }
+
+        private Matrix4f GetView(Vector4f eye,Vector4f center,Vector4f up)
+        {
+            Vector4f f = Normalize(center-eye);
+            Vector4f s = Normalize(GetCross(f, up));
+            Vector4f u = GetCross(s, f);
+
+            Matrix4f result = new Matrix4f(new float[,]
+                {
+                    {  s.GetValue(0), s.GetValue(1), s.GetValue(2),-DotMatrix(s,eye) },
+                    {  u.GetValue(0), u.GetValue(1), u.GetValue(2),-DotMatrix(u,eye) },
+                    { -f.GetValue(0),-f.GetValue(1),-f.GetValue(2), DotMatrix(f,eye) },
+                    {  0,             0,             0,             1.0f             }
+                });
+
+            return result;
+        }
+
+        private Vector4f Normalize(Vector4f inV)
+        {
+            Vector4f result = inV * (float)(1.0f / Math.Sqrt(DotMatrix(inV,inV)));
+            
+            return result;
+        }
+
+        private float DotMatrix(Vector4f left, Vector4f right)
+        {
+            Vector4f multiResult = left * right;
+            float result = multiResult.GetValue(0) + multiResult.GetValue(1) + multiResult.GetValue(2);
+            
+            return result;
+        }
+
+        private Matrix4f GetPerspective(float FOV, float ar, float nearZ, float farZ)
+        {
+            ar = Math.Abs(ar);
+            float halfTanFOV = (float)Math.Tan((Math.PI * (FOV / 2.0) / 180.0));
+
+            Matrix4f result = new Matrix4f(new float[,] {
+                { 1.0f/(ar * halfTanFOV), 0,                 0,                                0                                   },
+                { 0,                      1.0f / halfTanFOV, 0,                                0                                   },
+                { 0,                      0,                 -(farZ + nearZ) / (farZ - nearZ), (2 * farZ * nearZ) / (farZ - nearZ) },
+                { 0,                      0,                 -1.0f,                            1.0f                                }
+            });
+            return result;
+        }
+
     }
+
+
 }

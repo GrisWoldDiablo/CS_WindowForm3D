@@ -107,6 +107,7 @@
             this.textBox36 = new System.Windows.Forms.TextBox();
             this.textBox37 = new System.Windows.Forms.TextBox();
             this.textBox38 = new System.Windows.Forms.TextBox();
+            this.textBox39 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
@@ -601,12 +602,11 @@
             // 
             // trackBar6
             // 
-            this.trackBar6.Location = new System.Drawing.Point(132, 145);
+            this.trackBar6.Location = new System.Drawing.Point(116, 174);
             this.trackBar6.Maximum = 500;
             this.trackBar6.Minimum = -500;
             this.trackBar6.Name = "trackBar6";
-            this.trackBar6.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.trackBar6.Size = new System.Drawing.Size(45, 77);
+            this.trackBar6.Size = new System.Drawing.Size(77, 45);
             this.trackBar6.TabIndex = 26;
             this.trackBar6.Scroll += new System.EventHandler(this.trackBar6_Scroll);
             // 
@@ -732,8 +732,8 @@
             // trackBar17
             // 
             this.trackBar17.Location = new System.Drawing.Point(188, 466);
-            this.trackBar17.Maximum = 5000;
-            this.trackBar17.Minimum = -5000;
+            this.trackBar17.Maximum = 10000;
+            this.trackBar17.Minimum = -10000;
             this.trackBar17.Name = "trackBar17";
             this.trackBar17.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBar17.Size = new System.Drawing.Size(45, 104);
@@ -877,11 +877,21 @@
             this.textBox38.Size = new System.Drawing.Size(50, 20);
             this.textBox38.TabIndex = 42;
             // 
+            // textBox39
+            // 
+            this.textBox39.Location = new System.Drawing.Point(710, 162);
+            this.textBox39.Name = "textBox39";
+            this.textBox39.Size = new System.Drawing.Size(100, 20);
+            this.textBox39.TabIndex = 43;
+            this.textBox39.TextChanged += new System.EventHandler(this.textBox39_TextChanged);
+            this.textBox39.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox39_KeyDown);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1227, 801);
+            this.Controls.Add(this.textBox39);
             this.Controls.Add(this.textBox38);
             this.Controls.Add(this.textBox37);
             this.Controls.Add(this.textBox36);
@@ -1073,6 +1083,7 @@
         private System.Windows.Forms.TextBox textBox36;
         private System.Windows.Forms.TextBox textBox37;
         private System.Windows.Forms.TextBox textBox38;
+        private System.Windows.Forms.TextBox textBox39;
     }
 }
 
