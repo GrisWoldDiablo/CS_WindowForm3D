@@ -22,14 +22,14 @@ namespace CS_WindowsFormDraw
         static float theta = 0, phi = 0;
 
         static double[]
-            point1 = { 25, 50, 0 },
-            point2 = { 25, 200, 0 },
-            point3 = { 150, 200, 0 },
-            point4 = { 150, 50, 0 },
-            point5 = { 50, 50, 150 },
-            point6 = { 50, 200, 150 },
-            point7 = { 100, 200, 150 },
-            point8 = { 100, 50, 150 },
+            point1 = { 1, 2, 0 },
+            point2 = { 5, 2, 0 },
+            point3 = { 5, 5, 0 },
+            point4 = { 1, 5, 0 },
+            point5 = { 1, 2, 4 },
+            point6 = { 5, 2, 4 },
+            point7 = { 5, 5, 4 },
+            point8 = { 1, 5, 4 },
             zAxisU = { 0, 0, 500 },
             zAxisD = { 0, 0, -500 },
             xAxisU = { 500, 0, 0 },
@@ -37,9 +37,9 @@ namespace CS_WindowsFormDraw
             yAxisU = { 0, 500, 0 },
             yAxisD = { 0, -500, 0 },
             origin = { 0, 0, 0 },
-            camera = { 0, 0, 0 },//0,0,-100
+            camera = { 50, 0, 0 },//0,0,-100
             camV = { -2, 0, 0 },//1,-3.14,-2.6
-            viewerV = { 500, 500, 500,70 },//0,0,-1000
+            viewerV = { 50, 500, 0, 6.0 },//0,0,-1000
             textXp = {30,0,0 },
             textYp = {0,30,0 },
             textZp = {0,0,30 }, 
@@ -78,7 +78,7 @@ namespace CS_WindowsFormDraw
         Vector4f cameraPosition = new Vector4f(new float[] { (float)viewerV[0], (float)viewerV[1], (float)viewerV[2], 1 });
 
 
-        bool changed18 = false, changed19 = false, changed20 = false, changed21 = false, changed22 = false, changed23 = false;
+        bool changed18 = false, changed19 = false, changed20 = false, changed21 = false, changed22 = false, changed23 = false, changed28 = false;
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             theta = float.Parse(textBox1.Text);
@@ -527,6 +527,10 @@ namespace CS_WindowsFormDraw
         private void trackBar8_Scroll(object sender, EventArgs e)
         {
             camera[1] = trackBar8.Value;
+            if (camera[1]>0)
+            {
+
+            }
             textBox19.Text = (trackBar8.Value).ToString();
             updateSquare();
             this.Refresh();
@@ -773,9 +777,17 @@ namespace CS_WindowsFormDraw
             textBox36.Text += e.KeyCode.ToString();
         }
 
-        private void textBox39_TextChanged(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
+            button7_Click(sender, e);
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
 
+        private void textBox28_TextChanged(object sender, EventArgs e)
+        {
+            changed28 = true;
         }
 
         private void trackBar13_Scroll(object sender, EventArgs e)
@@ -867,12 +879,17 @@ namespace CS_WindowsFormDraw
             {
                 viewerV[2] = int.Parse(textBox23.Text);
             }
+            if (changed28)
+            {
+                viewerV[3] = int.Parse(textBox28.Text);
+            }
             changed18 = false;
             changed19 = false;
             changed20 = false;
             changed21 = false;
             changed22 = false;
             changed23 = false;
+            changed28 = false;
 
             textBox18.Text = camera[0].ToString();
             textBox19.Text = camera[1].ToString();
@@ -880,6 +897,7 @@ namespace CS_WindowsFormDraw
             textBox21.Text = viewerV[0].ToString();
             textBox22.Text = viewerV[1].ToString();
             textBox23.Text = viewerV[2].ToString();
+            textBox28.Text = viewerV[3].ToString();
 
             trackBar7.Value = (int)camera[0];
             trackBar8.Value = (int)camera[1];
@@ -887,6 +905,7 @@ namespace CS_WindowsFormDraw
             trackBar10.Value = (int)viewerV[0];
             trackBar11.Value = (int)viewerV[1];
             trackBar12.Value = (int)viewerV[2];
+            trackBar17.Value = (int)viewerV[3] * 100;
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -1153,11 +1172,11 @@ namespace CS_WindowsFormDraw
 
             
 
-            gra.DrawLine(new Pen(Color.Green, penWidthAxes), points[12], points[13]);
-            gra.DrawLine(new Pen(Color.DarkBlue, penWidthAxes), points[14], points[9]);
-            gra.DrawLine(new Pen(Color.Blue, penWidthAxes), points[8], points[14]);
-            gra.DrawLine(new Pen(Color.IndianRed, penWidthAxes), points[14], points[11]);
-            gra.DrawLine(new Pen(Color.Red, penWidthAxes), points[10], points[14]);
+            //gra.DrawLine(new Pen(Color.Green, penWidthAxes), points[12], points[13]);
+            //gra.DrawLine(new Pen(Color.DarkBlue, penWidthAxes), points[14], points[9]);
+            //gra.DrawLine(new Pen(Color.Blue, penWidthAxes), points[8], points[14]);
+            //gra.DrawLine(new Pen(Color.IndianRed, penWidthAxes), points[14], points[11]);
+            //gra.DrawLine(new Pen(Color.Red, penWidthAxes), points[10], points[14]);
             /////
             
             gra.DrawLine(new Pen(Color.Black, penWidth), points[0], points[1]);
@@ -1201,7 +1220,7 @@ namespace CS_WindowsFormDraw
             float FOV = (float)viewerV[3];
             Vector4f cameraPos = new Vector4f(new float[] { (float)viewerV[0], (float)viewerV[1], (float)viewerV[2], 1});
             Vector4f lookPos = new Vector4f(new float[] { (float)camera[0], (float)camera[1], (float)camera[2], 1 });
-            Vector4f upPos = new Vector4f(new float[] { 0, 0, 1, 1 });
+            Vector4f upPos = new Vector4f(new float[] { 0, 0, -1, 1 });
             float vAngle = (float)camV[0];
             float hAngle = (float)camV[2];
             Vector4f direction = new Vector4f(new float[]
@@ -1221,7 +1240,7 @@ namespace CS_WindowsFormDraw
             });
             Vector4f upHead = GetCross(right, direction);
 
-            Matrix4f viewMat = GetView(cameraPos, cameraPos+direction, upPos);
+            Matrix4f viewMat = GetView(cameraPos, lookPos + direction, upPos);
 
             Matrix4f model = new Matrix4f(1.0f);
 
@@ -1233,47 +1252,6 @@ namespace CS_WindowsFormDraw
                        
             
             
-            double[,] camPersX =
-            {
-                { 1, 0,                 0,                0 },
-                { 0, Math.Cos(camV[0]), Math.Sin(camV[0]),0 },
-                { 0,-Math.Sin(camV[0]), Math.Cos(camV[0]),0 },
-                { 0, 0,                 0,                0 }
-            };
-            double[,] camPersY =
-            {
-                {    Math.Cos(camV[1]), 0, -Math.Sin(camV[1]), 0 },
-                { 0, 1,                 0,                     0 },
-                {    Math.Sin(camV[1]), 0,  Math.Cos(camV[1]), 0 },
-                { 0, 0,                 0,                     0 }
-            };
-            double[,] camPersZ =
-            {
-                { Math.Cos(camV[2]), Math.Sin(camV[2]), 0, camOri[0] },
-                {-Math.Sin(camV[2]), Math.Cos(camV[2]), 0, camOri[1] },
-                { 0,                 0,                 1, camOri[2] },
-                { 0,                 0,                 0, 0 }
-            };
-
-
-            double[,] camOri1 =
-            {
-                {1, 0, 0 },
-                {0, Math.Cos(camOri[0]), Math.Sin(camOri[0]) },
-                {0, -Math.Sin(camOri[0]), Math.Cos(camOri[0]) }
-            };
-            double[,] camOri2 =
-            {
-                {Math.Cos(camOri[1]), 0, -Math.Sin(camOri[1]) },
-                {0, 1, 0 },
-                {Math.Sin(camOri[1]), 0, Math.Cos(camOri[1]) }
-            };
-            double[,] camOri3 =
-            {
-                {Math.Cos(camOri[2]), Math.Sin(camOri[2]), 0 },
-                {-Math.Sin(camOri[2]), Math.Cos(camOri[2]), 0 },
-                {0, 0, 1 }
-            };
             double x = camV[0], y = camV[1], z = camV[2], w = viewerV[3];
             double[,] quaternionMat =
             {
@@ -1492,9 +1470,9 @@ namespace CS_WindowsFormDraw
         {
             Vector4f result = new Vector4f(new float[] 
             {
-                left.GetValue(1) * right.GetValue(2) - right.GetValue(1) * left.GetValue(2),
-                left.GetValue(2) * right.GetValue(0) - right.GetValue(2) * left.GetValue(0),
-                left.GetValue(0) * right.GetValue(1) - right.GetValue(0) * left.GetValue(1),
+                (left.GetValue(1) * right.GetValue(2)) - (right.GetValue(1) * left.GetValue(2)),
+                (left.GetValue(2) * right.GetValue(0)) - (right.GetValue(2) * left.GetValue(0)),
+                (left.GetValue(0) * right.GetValue(1)) - (right.GetValue(0) * left.GetValue(1)),
                 1.0f
             });
 
@@ -1520,8 +1498,9 @@ namespace CS_WindowsFormDraw
 
         private Vector4f Normalize(Vector4f inV)
         {
-            Vector4f result = inV * (float)(1.0f / Math.Sqrt(DotMatrix(inV,inV)));
-            
+            //Vector4f result = inV * (float)(1.0f / Math.Sqrt(DotMatrix(inV,inV)));
+            float wLength = (float)Math.Sqrt(Math.Pow(inV.GetValue(0),2) + Math.Pow(inV.GetValue(1), 2) + Math.Pow(inV.GetValue(2), 2));
+            Vector4f result = inV *(1.0f/wLength);
             return result;
         }
 
@@ -1536,13 +1515,14 @@ namespace CS_WindowsFormDraw
         private Matrix4f GetPerspective(float FOV, float ar, float nearZ, float farZ)
         {
             ar = Math.Abs(ar);
-            float halfTanFOV = (float)Math.Tan((Math.PI * (FOV / 2.0) / 180.0));
-
+            float halfTanFOV = (float)Math.Atan((Math.PI * FOV * 0.5 / 180.0));
+            //float halfTanFOV = (float)Math.Tan(FOV*0.5);
+            //float h = (float)(Math.Cos(0.5 * FOV) / Math.Sin(0.5 * FOV));
             Matrix4f result = new Matrix4f(new float[,] {
                 { 1.0f/(ar * halfTanFOV), 0,                 0,                                0                                   },
-                { 0,                      1.0f / halfTanFOV, 0,                                0                                   },
-                { 0,                      0,                 -(farZ + nearZ) / (farZ - nearZ), (2 * farZ * nearZ) / (farZ - nearZ) },
-                { 0,                      0,                 -1.0f,                            1.0f                                }
+                { 0,                      1.0f / (ar * halfTanFOV), 0,                                0                                   },
+                { 0,                      0,                 /*-farZ / (farZ - nearZ),-farZ * nearZ / (farZ - nearZ) },*/-(farZ + nearZ) / (farZ - nearZ), (2 * farZ * nearZ) / (farZ - nearZ) },
+                { 0,                      0,                 -1.0f,                            0.0f                                }
             });
             return result;
         }

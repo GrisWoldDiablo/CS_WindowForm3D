@@ -728,6 +728,7 @@
             this.textBox28.Name = "textBox28";
             this.textBox28.Size = new System.Drawing.Size(50, 20);
             this.textBox28.TabIndex = 31;
+            this.textBox28.TextChanged += new System.EventHandler(this.textBox28_TextChanged);
             // 
             // trackBar17
             // 
@@ -883,7 +884,6 @@
             this.textBox39.Name = "textBox39";
             this.textBox39.Size = new System.Drawing.Size(100, 20);
             this.textBox39.TabIndex = 43;
-            this.textBox39.TextChanged += new System.EventHandler(this.textBox39_TextChanged);
             this.textBox39.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox39_KeyDown);
             // 
             // Form1
@@ -973,6 +973,7 @@
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();

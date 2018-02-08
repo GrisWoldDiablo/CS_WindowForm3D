@@ -68,13 +68,13 @@ namespace CS_WindowsFormDraw
             return result;
         }
 
-        public static Vector4f operator *(Vector4f inV, float value)
+        public static Vector4f operator *(Vector4f inV, float scalar)
         {
             Vector4f result = new Vector4f(new float[]
             {
-                inV.GetValue(0) * value,
-                inV.GetValue(1) * value,
-                inV.GetValue(2) * value,
+                inV.GetValue(0) * scalar,
+                inV.GetValue(1) * scalar,
+                inV.GetValue(2) * scalar,
                 1
             });
 
