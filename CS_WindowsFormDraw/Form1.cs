@@ -22,31 +22,31 @@ namespace CS_WindowsFormDraw
         static float theta = 0, phi = 0;
 
         static double[]
-            point1 = { 1, 2, 0 },
-            point2 = { 5, 2, 0 },
-            point3 = { 5, 5, 0 },
-            point4 = { 1, 5, 0 },
-            point5 = { 1, 2, 4 },
-            point6 = { 5, 2, 4 },
-            point7 = { 5, 5, 4 },
-            point8 = { 1, 5, 4 },
-            zAxisU = { 0, 0, 500 },
-            zAxisD = { 0, 0, -500 },
-            xAxisU = { 500, 0, 0 },
-            xAxisD = { -500, 0, 0 },
-            yAxisU = { 0, 500, 0 },
-            yAxisD = { 0, -500, 0 },
+            point1 = { 1, 1, 0 },
+            point2 = { 1, 6, 0 },
+            point3 = { 6, 6, 0 },
+            point4 = { 6, 1, 0 },
+            point5 = { 1, 1, 5 },
+            point6 = { 1, 6, 5 },
+            point7 = { 6, 6, 5 },
+            point8 = { 6, 1, 5 },
+            zAxisU = { 0, 0, 15 },
+            zAxisD = { 0, 0, -15 },
+            xAxisU = { 15, 0, 0 },
+            xAxisD = { -15, 0, 0 },
+            yAxisU = { 0, 15, 0 },
+            yAxisD = { 0, -15, 0 },
             origin = { 0, 0, 0 },
-            camera = { 50, 0, 0 },//0,0,-100
+            camera = { 0, 0, 0 },//0,0,-100
             camV = { -2, 0, 0 },//1,-3.14,-2.6
-            viewerV = { 50, 500, 0, 6.0 },//0,0,-1000
+            viewerV = { 10, 10, 0, 6.0 },//0,0,-1000
             textXp = {30,0,0 },
             textYp = {0,30,0 },
             textZp = {0,0,30 }, 
             textXm = { -50, 0, 0 },
             textYm = { 0, -50, 0 },
             textZm = { 0, 0, -50 },
-            camOri = { 0, 1000, 0 }; //{ 0.1, -1000, 0 }
+            camOri = { 0.1f, 1000, 0 }; //{ 0.1, -1000, 0 }
 
         double scaleFactor = 2.0;
         double translateX = 0, translateY = 0, translateZ = 0;
@@ -1172,11 +1172,11 @@ namespace CS_WindowsFormDraw
 
             
 
-            //gra.DrawLine(new Pen(Color.Green, penWidthAxes), points[12], points[13]);
-            //gra.DrawLine(new Pen(Color.DarkBlue, penWidthAxes), points[14], points[9]);
-            //gra.DrawLine(new Pen(Color.Blue, penWidthAxes), points[8], points[14]);
-            //gra.DrawLine(new Pen(Color.IndianRed, penWidthAxes), points[14], points[11]);
-            //gra.DrawLine(new Pen(Color.Red, penWidthAxes), points[10], points[14]);
+            gra.DrawLine(new Pen(Color.Green, penWidthAxes), points[12], points[13]);
+            gra.DrawLine(new Pen(Color.DarkBlue, penWidthAxes), points[14], points[9]);
+            gra.DrawLine(new Pen(Color.Blue, penWidthAxes), points[8], points[14]);
+            gra.DrawLine(new Pen(Color.IndianRed, penWidthAxes), points[14], points[11]);
+            gra.DrawLine(new Pen(Color.Red, penWidthAxes), points[10], points[14]);
             /////
             
             gra.DrawLine(new Pen(Color.Black, penWidth), points[0], points[1]);
@@ -1247,11 +1247,12 @@ namespace CS_WindowsFormDraw
             Matrix4f projection = GetPerspective(FOV, ar, nearZ, farZ);
 
             Matrix4f mainMatrix = projection * viewMat * model;
-            
 
-                       
-            
-            
+           
+
+
+
+
             double x = camV[0], y = camV[1], z = camV[2], w = viewerV[3];
             double[,] quaternionMat =
             {
@@ -1324,11 +1325,12 @@ namespace CS_WindowsFormDraw
                 float halfTanFOV = (float)Math.Tan((Math.PI * (FOV / 2.0) / 180.0));
                 Vector4f result = mainMatrix * (new Vector4f(new float[] { (float)pointT[0], (float)pointT[1], (float)pointT[2], 1.0f }));
                 temporaryPF = new PointF();
-                temporaryPF.X = (float)(result.GetValue(0) / (result.GetValue(2) * halfTanFOV)) + this.Width / 2;
-                temporaryPF.Y = (float)(result.GetValue(1) / (result.GetValue(2) * halfTanFOV)) + this.Height / 2;
-            }
+                temporaryPF.X = (float)(result.x() / (result.z() * halfTanFOV)) + this.Width / 2;
+                temporaryPF.Y = (float)(result.y() / (result.z() * halfTanFOV)) + this.Height / 2;
 
+            }
             return temporaryPF;
+
         }
         private double[,] multiply3x3Matrix(double[,] mat1,double[,] mat2)
         {
@@ -1470,9 +1472,9 @@ namespace CS_WindowsFormDraw
         {
             Vector4f result = new Vector4f(new float[] 
             {
-                (left.GetValue(1) * right.GetValue(2)) - (right.GetValue(1) * left.GetValue(2)),
-                (left.GetValue(2) * right.GetValue(0)) - (right.GetValue(2) * left.GetValue(0)),
-                (left.GetValue(0) * right.GetValue(1)) - (right.GetValue(0) * left.GetValue(1)),
+                (left.y() * right.z()) - (right.y()  * left.z()),
+                (left.z() * right.x()) - (right.z()  * left.x()),
+                (left.x() * right.y()) - (right.x()  * left.y()),
                 1.0f
             });
 
@@ -1487,9 +1489,9 @@ namespace CS_WindowsFormDraw
 
             Matrix4f result = new Matrix4f(new float[,]
                 {
-                    {  s.GetValue(0), s.GetValue(1), s.GetValue(2),-DotMatrix(s,eye) },
-                    {  u.GetValue(0), u.GetValue(1), u.GetValue(2),-DotMatrix(u,eye) },
-                    { -f.GetValue(0),-f.GetValue(1),-f.GetValue(2), DotMatrix(f,eye) },
+                    {  s.x(), s.y(), s.z(),-DotMatrix(s,eye) },
+                    {  u.x(), u.y(), u.z(),-DotMatrix(u,eye) },
+                    { -f.x(),-f.y(),-f.z(), DotMatrix(f,eye) },
                     {  0,             0,             0,             1.0f             }
                 });
 
@@ -1499,7 +1501,7 @@ namespace CS_WindowsFormDraw
         private Vector4f Normalize(Vector4f inV)
         {
             //Vector4f result = inV * (float)(1.0f / Math.Sqrt(DotMatrix(inV,inV)));
-            float wLength = (float)Math.Sqrt(Math.Pow(inV.GetValue(0),2) + Math.Pow(inV.GetValue(1), 2) + Math.Pow(inV.GetValue(2), 2));
+            float wLength = (float)Math.Sqrt(Math.Pow(inV.x(),2) + Math.Pow(inV.y(), 2) + Math.Pow(inV.z(), 2));
             Vector4f result = inV *(1.0f/wLength);
             return result;
         }
@@ -1507,7 +1509,7 @@ namespace CS_WindowsFormDraw
         private float DotMatrix(Vector4f left, Vector4f right)
         {
             Vector4f multiResult = left * right;
-            float result = multiResult.GetValue(0) + multiResult.GetValue(1) + multiResult.GetValue(2);
+            float result = multiResult.x() + multiResult.y() + multiResult.z();
             
             return result;
         }

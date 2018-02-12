@@ -8,13 +8,16 @@ namespace CS_WindowsFormDraw
 {
     public class Vector4f
     {
-        private float[] matrix = new float[4];
+        private float[] matrix;
+        public float x() { return matrix[0]; }
+        public float y() { return matrix[1]; }
+        public float z() { return matrix[2]; }
+        public float w() { return matrix[3]; }
 
         public Vector4f()
         {
-
+            matrix = new float[4];
         }
-
         public Vector4f(float[] values)
         {
             matrix = values;
@@ -25,18 +28,18 @@ namespace CS_WindowsFormDraw
             matrix[m] = value;
         }
 
-        public float GetValue(int m)
-        {
-            return matrix[m];
-        }
+        //public float GetValue(int m)
+        //{
+        //    return matrix[m];
+        //}
 
         public static Vector4f operator +(Vector4f left, Vector4f right)
         {
-            Vector4f result = new Vector4f(new float[] 
+            Vector4f result = new Vector4f(new float[]
             {
-                left.GetValue(0) + right.GetValue(0),
-                left.GetValue(1) + right.GetValue(1),
-                left.GetValue(2) + right.GetValue(2),
+                left.x() + right.x(),
+                left.y() + right.y(),
+                left.z() + right.z(),
                 1
             });
             
@@ -46,9 +49,9 @@ namespace CS_WindowsFormDraw
         {
             Vector4f result = new Vector4f(new float[]
             {
-                left.GetValue(0) - right.GetValue(0),
-                left.GetValue(1) - right.GetValue(1),
-                left.GetValue(2) - right.GetValue(2),
+                left.x() - right.x(),
+                left.y() - right.y(),
+                left.z() - right.z(),
                 1
             });
 
@@ -59,9 +62,9 @@ namespace CS_WindowsFormDraw
         {
             Vector4f result = new Vector4f(new float[]
             {
-                left.GetValue(0) * right.GetValue(0),
-                left.GetValue(1) * right.GetValue(1),
-                left.GetValue(2) * right.GetValue(2),
+                left.x() * right.x(),
+                left.y() * right.y(),
+                left.z() * right.z(),
                 1
             });
 
@@ -72,9 +75,9 @@ namespace CS_WindowsFormDraw
         {
             Vector4f result = new Vector4f(new float[]
             {
-                inV.GetValue(0) * scalar,
-                inV.GetValue(1) * scalar,
-                inV.GetValue(2) * scalar,
+                inV.x() * scalar,
+                inV.y() * scalar,
+                inV.z() * scalar,
                 1
             });
 
