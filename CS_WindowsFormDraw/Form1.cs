@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 
+
 namespace CS_WindowsFormDraw
 {
     public partial class Form1 : Form
@@ -1063,6 +1064,22 @@ namespace CS_WindowsFormDraw
 
 
             DrawSquare(myPoints);
+
+            Matrix4f M1 = new Matrix4f(new float[,]{
+                {1, 0, 2, 0 },
+                {1,-1, 4, 0 },
+                {3, 3, 2, 0 },
+                {0, 0, 0, 1 }
+            });
+            Matrix4f M2 = new Matrix4f(new float[,]{
+                {7,   -3,  -1, 0 },
+                {-5,   2,   1, 0 },
+                {-3, 3.0f/2.0f, 1.0f/2.0f, 0 },
+                {0,    0,   0, 1 }
+            });
+
+            Matrix4f r1 = M1 * M2;
+            MessageBox.Show("test");
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -1325,8 +1342,8 @@ namespace CS_WindowsFormDraw
                 float halfTanFOV = (float)Math.Tan((Math.PI * (FOV / 2.0) / 180.0));
                 Vector4f result = mainMatrix * (new Vector4f(new float[] { (float)pointT[0], (float)pointT[1], (float)pointT[2], 1.0f }));
                 temporaryPF = new PointF();
-                temporaryPF.X = (float)(result.x() / (result.z() * halfTanFOV)) + this.Width / 2;
-                temporaryPF.Y = (float)(result.y() / (result.z() * halfTanFOV)) + this.Height / 2;
+                temporaryPF.X = (float)(result[0] / (result[2] * halfTanFOV)) + this.Width / 2;
+                temporaryPF.Y = (float)(result[1] / (result[2] * halfTanFOV)) + this.Height / 2;
 
             }
             return temporaryPF;
@@ -1472,9 +1489,9 @@ namespace CS_WindowsFormDraw
         {
             Vector4f result = new Vector4f(new float[] 
             {
-                (left.y() * right.z()) - (right.y()  * left.z()),
-                (left.z() * right.x()) - (right.z()  * left.x()),
-                (left.x() * right.y()) - (right.x()  * left.y()),
+                (left[1] * right[2]) - (right[1]  * left[2]),
+                (left[2] * right[0]) - (right[2]  * left[0]),
+                (left[0] * right[1]) - (right[0]  * left[1]),
                 1.0f
             });
 
@@ -1489,9 +1506,9 @@ namespace CS_WindowsFormDraw
 
             Matrix4f result = new Matrix4f(new float[,]
                 {
-                    {  s.x(), s.y(), s.z(),-DotMatrix(s,eye) },
-                    {  u.x(), u.y(), u.z(),-DotMatrix(u,eye) },
-                    { -f.x(),-f.y(),-f.z(), DotMatrix(f,eye) },
+                    {  s[0], s[1], s[2],-DotMatrix(s,eye) },
+                    {  u[0], u[1], u[2],-DotMatrix(u,eye) },
+                    { -f[0],-f[1],-f[2], DotMatrix(f,eye) },
                     {  0,             0,             0,             1.0f             }
                 });
 
@@ -1501,7 +1518,7 @@ namespace CS_WindowsFormDraw
         private Vector4f Normalize(Vector4f inV)
         {
             //Vector4f result = inV * (float)(1.0f / Math.Sqrt(DotMatrix(inV,inV)));
-            float wLength = (float)Math.Sqrt(Math.Pow(inV.x(),2) + Math.Pow(inV.y(), 2) + Math.Pow(inV.z(), 2));
+            float wLength = (float)Math.Sqrt(Math.Pow(inV[0],2) + Math.Pow(inV[1], 2) + Math.Pow(inV[2], 2));
             Vector4f result = inV *(1.0f/wLength);
             return result;
         }
@@ -1509,7 +1526,7 @@ namespace CS_WindowsFormDraw
         private float DotMatrix(Vector4f left, Vector4f right)
         {
             Vector4f multiResult = left * right;
-            float result = multiResult.x() + multiResult.y() + multiResult.z();
+            float result = multiResult[0] + multiResult[1] + multiResult[2];
             
             return result;
         }
@@ -1521,10 +1538,10 @@ namespace CS_WindowsFormDraw
             //float halfTanFOV = (float)Math.Tan(FOV*0.5);
             //float h = (float)(Math.Cos(0.5 * FOV) / Math.Sin(0.5 * FOV));
             Matrix4f result = new Matrix4f(new float[,] {
-                { 1.0f/(ar * halfTanFOV), 0,                 0,                                0                                   },
-                { 0,                      1.0f / (ar * halfTanFOV), 0,                                0                                   },
-                { 0,                      0,                 /*-farZ / (farZ - nearZ),-farZ * nearZ / (farZ - nearZ) },*/-(farZ + nearZ) / (farZ - nearZ), (2 * farZ * nearZ) / (farZ - nearZ) },
-                { 0,                      0,                 -1.0f,                            0.0f                                }
+                { 1.0f/(ar * halfTanFOV), 0,                        0,                                0                                  },
+                { 0,                      1.0f / (ar * halfTanFOV), 0,                                0                                  },
+                { 0,                      0,                       -(farZ + nearZ) / (farZ - nearZ), (2 * farZ * nearZ) / (farZ - nearZ) },
+                { 0,                      0,                       -1.0f,                            0.0f                                }
             });
             return result;
         }
