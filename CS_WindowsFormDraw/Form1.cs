@@ -40,7 +40,7 @@ namespace CS_WindowsFormDraw
             origin = { 0, 0, 0 },
             camera = { 0, 0, 0 },//0,0,-100
             camV = { -2, 0, 0 },//1,-3.14,-2.6
-            viewerV = { 10, 10, 0, 6.0 },//0,0,-1000
+            viewerV = { 10, 10, 6, 3.0 },//0,0,-1000
             textXp = {30,0,0 },
             textYp = {0,30,0 },
             textZp = {0,0,30 }, 
@@ -75,6 +75,15 @@ namespace CS_WindowsFormDraw
         static PointF textYYm;
         static PointF textZZm;
 
+        static Vector4f fa = new Vector4f(4, -1, 1, 1);
+        static Vector4f fb = new Vector4f(0, 1, 8, 1);
+        static Vector4f fc = new Vector4f(1, 1, 3, 1);
+        static Vector4f fv = fa - fc;
+        static Vector4f fw = fb - fc;
+        static Vector4f crossVW = Vector4f.Cross(fv, fw);
+        float thearea = crossVW.GetLength() / 2;
+        //static Vector4f abcdefCross = Vector4f.Cross(abc, def);
+        //static float defDot = DotMatrix(abcdefCross, abc);
 
         Vector4f cameraPosition = new Vector4f(new float[] { (float)viewerV[0], (float)viewerV[1], (float)viewerV[2], 1 });
 
@@ -702,11 +711,11 @@ namespace CS_WindowsFormDraw
             
             if (trackBar16.Value > 0)
             {
-                translateZ = 1f;
+                translateZ = 0.1f;
             }
             else
             {
-                translateZ = -1f;
+                translateZ = -0.1f;
             }
             trackBar16.Value = 0;
             translateOn(point1);
@@ -727,11 +736,11 @@ namespace CS_WindowsFormDraw
         {
             if (trackBar15.Value > 0)
             {
-                translateX = 2.0;
+                translateX = 0.1f;
             }
             else
             {
-                translateX = -2.0;
+                translateX = -0.1f;
             }
             trackBar15.Value = 0;
             translateOn(point1);
@@ -752,11 +761,11 @@ namespace CS_WindowsFormDraw
         {
             if (trackBar14.Value > 0)
             {
-                translateY = 1f;
+                translateY = 0.1f;
             }
             else
             {
-                translateY = -1f;
+                translateY = -0.1f;
             }
             trackBar14.Value = 0;
             translateOn(point1);
@@ -786,6 +795,42 @@ namespace CS_WindowsFormDraw
             DrawSquare(myPoints);
         }
 
+        private void trackBar23_Scroll(object sender, EventArgs e)
+        {
+            double valueScale;
+            if (trackBar23.Value > 0)
+            {
+                valueScale = 2.0f;
+            }
+            else
+            {
+                valueScale = 0.5f;
+            }
+
+
+            translateX = (point1[0] + point7[0]) / 2;
+            translateY = (point1[1] + point7[1]) / 2;
+            translateZ = (point1[2] + point7[2]) / 2;
+
+            scaleOn(point1,valueScale);
+            scaleOn(point2,valueScale);
+            scaleOn(point3,valueScale);
+            scaleOn(point4,valueScale);
+            scaleOn(point5,valueScale);
+            scaleOn(point6,valueScale);
+            scaleOn(point7,valueScale);
+            scaleOn(point8,valueScale);
+
+            trackBar23.Value = 0;
+            translateX = 0;
+            translateY = 0;
+            translateZ = 0;
+
+            updateSquare();
+            this.Refresh();
+            DrawSquare(myPoints);
+        }
+
         private void textBox28_TextChanged(object sender, EventArgs e)
         {
             changed28 = true;
@@ -804,11 +849,12 @@ namespace CS_WindowsFormDraw
         {
             double[,] translate =
             {
-                { 1,0,0,translateX },
+                {1,0,0,translateX },
                 {0,1,0,translateY },
                 {0,0,1,translateZ },
                 {0,0,0,1 }
             };
+
             double[] tempMatrix = multiply4x1Matrix(translate, new double[] { pointToTranslate[0], pointToTranslate[1], pointToTranslate[2], 1 });
 
             pointToTranslate[0] = tempMatrix[0];
@@ -1230,7 +1276,7 @@ namespace CS_WindowsFormDraw
         }
         private PointF pointTransfer(double[] pointT)
         {
-            float ar = (float)this.Width / (float)this.Height;
+            float ar = this.Width / (float)this.Height;
             float nearZ = (float)camOri[0];
             float farZ = (float)camOri[1];
 
@@ -1263,92 +1309,30 @@ namespace CS_WindowsFormDraw
 
             Matrix4f projection = GetPerspective(FOV, ar, nearZ, farZ);
 
-            Matrix4f mainMatrix = projection * viewMat * model;
-
-           
-
-
-
-
-            double x = camV[0], y = camV[1], z = camV[2], w = viewerV[3];
-            double[,] quaternionMat =
-            {
-                {1-(y*y)-(z*z),   x*y-z*w,          x*z+y*w,0 },
-                {x*y+z*w,         1-(x*x)-(z*z),    y*z-x*w ,0 },
-                {x*z-y*w,         y*z+x*w,          1-(x*x)-(y*y),0 },
-                { 0, 0,                 0,                     1}
-            };
-
-            //double S = 1 / (Math.Tan((viewerV[1] / 2) * (Math.PI / 180)));
-            //double[,] fustrum =
-            //{
-            //    {S,0,0,0 },
-            //    {0,S,0,0 },
-            //    {0,0,-(viewerV[2]/(viewerV[2]-viewerV[3])),-1 },
-            //    {0,0,-((viewerV[2]*viewerV[3])/(viewerV[2]-viewerV[3])),0 }
-            //};
-
-            double[,] fustrum =
-            {
-                {1,          0,         -viewerV[0]/viewerV[2],  0 },
-                {0,          1,         -viewerV[1]/viewerV[2],  0 },
-                {0,          0,          1,                      0 },
-                {0,          0,         -1/viewerV[2],           1 }
-            };
-
-            double[,] scaling =
-            {
-                {scaleFactor, 0,           0,           0 },
-                {0,           scaleFactor, 0,           0 },
-                {0,           0,           scaleFactor, 0 },
-                {0,           0,           0,           1 }
-            };
+            Matrix4f mainMatrix =   projection * viewMat * model;
             
 
-            PointF temporaryPF;
+            PointF temporaryPF = new PointF(); ;
             if (checkBox7.Checked)
             {
                 temporaryPF = new PointF((float)(-Math.Sin(theta) * pointT[0] + Math.Cos(theta) * pointT[1]) + (this.Width / 2), (float)(-Math.Cos(theta) * Math.Sin(phi) * pointT[0] + (-Math.Sin(theta) * Math.Sin(phi)) * pointT[1] + Math.Cos(phi) * pointT[2]) + (this.Height / 2));
+                temporaryPF.X *= 0.5f;
+                temporaryPF.Y *= 0.5f;
                 return temporaryPF;
             }
             else
             {
-                //////////////////////
-                ////Origin
-                ////double[,] tempMat1 = multiply3x3Matrix(pers1, pers2);
-                ////double[,] tempMat2 = multiply3x3Matrix(tempMat1, pers3);
-
-                //double[,] tempMatCam = multiplyMats(multiplyMats(camPersX, camPersY), camPersZ);
-
-                //double newPX = pointT[0] - camera[0];
-                //double newPY = pointT[1] - camera[1];
-                //double newPZ = pointT[2] - camera[2];
-                ////double[] pointNewMat = multiply3x1Matrix(tempMat2,new double[] { newPX, newPY, newPZ });
-
-
-                ////double[,] pointNewMatCam = multiplyMats(tempMatCam, new double[,] { { newPX }, { newPY }, { newPZ }, { 1 }  });
-                //double[,] pointNewMatCam = multiplyMats(tempMatCam, new double[,] { { newPX }, { newPY }, { newPZ }, { 1 } });
-
-
-                //temporaryPF = new PointF();
-
-                ////double[] tempCoord = { pointNewMat[0], pointNewMat[1], pointNewMat[2], 1 };
-                ////double[] tempCoord = new double[] { newPX, newPY, newPZ, 1 };
-                ////double[] tempMatFustrum = multiply4x1Matrix(fustrum, pointNewMatCam);
-                //double[,] tempMatFustrum = multiplyMats(fustrum, pointNewMatCam);
-                //temporaryPF.X = (float)(tempMatFustrum[0,0] / (tempMatFustrum[3,0])) + this.Width / 2;
-                //temporaryPF.Y = (float)(tempMatFustrum[1,0] / (tempMatFustrum[3,0])) + this.Height / 2;
-                ////////////////////////
+                
                 float halfTanFOV = (float)Math.Tan((Math.PI * (FOV / 2.0) / 180.0));
                 Vector4f result = mainMatrix * (new Vector4f(new float[] { (float)pointT[0], (float)pointT[1], (float)pointT[2], 1.0f }));
-                temporaryPF = new PointF();
-                temporaryPF.X = (float)(result[0] / (result[2] * halfTanFOV)) + this.Width / 2;
-                temporaryPF.Y = (float)(result[1] / (result[2] * halfTanFOV)) + this.Height / 2;
+                temporaryPF.X = (float)(result[0] / (result[2] * halfTanFOV)) + this.Width / 2.0f;
+                temporaryPF.Y = (float)(result[1] / (result[2] * halfTanFOV)) + this.Height / 2.0f;
 
             }
             return temporaryPF;
 
         }
+
         private double[,] multiply3x3Matrix(double[,] mat1,double[,] mat2)
         {
             double [,] tempMatResult=
@@ -1523,7 +1507,7 @@ namespace CS_WindowsFormDraw
             return result;
         }
 
-        private float DotMatrix(Vector4f left, Vector4f right)
+        private static float DotMatrix(Vector4f left, Vector4f right)
         {
             Vector4f multiResult = left * right;
             float result = multiResult[0] + multiResult[1] + multiResult[2];
@@ -1545,6 +1529,50 @@ namespace CS_WindowsFormDraw
             });
             return result;
         }
+
+        private void scaleOn(double[] pointToScale, double scaleValue)
+        {
+           
+            Vector4f transVector = new Vector4f((float)translateX, (float)translateY, (float)translateZ, 1);
+            Vector4f pointVector = new Vector4f((float)pointToScale[0], (float)pointToScale[1], (float)pointToScale[2], 1);
+
+            Vector4f newVect = pointVector - transVector;
+
+            Matrix4f scaleMat4f = new Matrix4f(new float[,]
+            {
+                {(float)scaleValue,0,0,0 },
+                {0,(float)scaleValue,0,0 },
+                {0,0,(float)scaleValue,0 },
+                {0,0,0,1 }
+            });
+
+            Vector4f newVect2 = scaleMat4f * newVect;
+            
+            Vector4f newVect3 = newVect2 + transVector;
+
+            pointToScale[0] = newVect3[0];
+            pointToScale[1] = newVect3[1];
+            pointToScale[2] = newVect3[2];
+        }
+
+        /*
+         * private void translateOn(double[] pointToTranslate)
+        {
+            double[,] translate =
+            {
+                {1,0,0,translateX },
+                {0,1,0,translateY },
+                {0,0,1,translateZ },
+                {0,0,0,1 }
+            };
+
+            double[] tempMatrix = multiply4x1Matrix(translate, new double[] { pointToTranslate[0], pointToTranslate[1], pointToTranslate[2], 1 });
+
+            pointToTranslate[0] = tempMatrix[0];
+            pointToTranslate[1] = tempMatrix[1];
+            pointToTranslate[2] = tempMatrix[2];
+        }
+         */
 
     }
 

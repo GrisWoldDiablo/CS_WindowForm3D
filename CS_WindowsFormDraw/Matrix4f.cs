@@ -13,29 +13,31 @@ namespace CS_WindowsFormDraw
     {
         private float[,] matrix;
 
+        public float[,] Matrix { get => matrix; set => matrix = value; }
+
         public float this[int i, int j]
         {
-            get { return matrix[i,j]; }
-            set { matrix[i,j] = value;}
+            get { return Matrix[i,j]; }
+            set { Matrix[i,j] = value;}
         }
 
         public Matrix4f()
         {
-            matrix = new float[4, 4];
+            Matrix = new float[4, 4];
         }
 
         public Matrix4f(float value)
         {
-            matrix = new float[4, 4];
-            matrix[0, 0] = value;
-            matrix[1, 1] = value;
-            matrix[2, 2] = value;
-            matrix[3, 3] = value;
+            Matrix = new float[4, 4];
+            Matrix[0, 0] = value;
+            Matrix[1, 1] = value;
+            Matrix[2, 2] = value;
+            Matrix[3, 3] = value;
         }
 
         public Matrix4f(float[,] values)
         {
-            matrix = values; 
+            Matrix = values; 
         }
 
 

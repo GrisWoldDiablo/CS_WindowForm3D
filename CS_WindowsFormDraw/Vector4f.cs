@@ -40,14 +40,15 @@ namespace CS_WindowsFormDraw
         {
             return (this[0] * other[0]) + (this[1] * other[1]) + (this[2] * other[2]) + (this[3] * other[3]);
         }
+        
 
         public static Vector4f Cross(Vector4f left, Vector4f right)
         {
             Vector4f result = new Vector4f(new float[]
-            {
-                (left[1] * right[2]) - (right[1]  * left[2]),
-                (left[2] * right[0]) - (right[2]  * left[0]),
-                (left[0] * right[1]) - (right[0]  * left[1]),
+            {                                                // Left(a,b,c) | Right(d,e,f)
+                (left[1] * right[2]) - (left[2] * right[1]), // bf - ce
+                (left[2] * right[0]) - (left[0] * right[2]), // cd - af 
+                (left[0] * right[1]) - (left[1] * right[0]), // ae - bd
                 1.0f
             });
 
@@ -59,7 +60,7 @@ namespace CS_WindowsFormDraw
             float length = this.GetLength(); 
 
             return this * (1.0f / length);
-            return new Vector4f(this[0] / length, this[1] / length, this[2] / length, 1);
+            //return new Vector4f(this[0] / length, this[1] / length, this[2] / length, 1);
         }
 
         public float GetLength()
